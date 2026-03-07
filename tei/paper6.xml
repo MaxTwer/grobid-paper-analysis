@@ -1,0 +1,1517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">How to Model AI Agents as Personas?: Applying the Persona Ecosystem Playground to 41,300 Posts on Moltbook for Behavioral Insights</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+				<date type="published" when="2026-03-03">3 Mar 2026</date>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Danial</forename><surname>Amin</surname></persName>
+						</author>
+						<author>
+							<persName><forename type="first">Bernard</forename><forename type="middle">J</forename><surname>Jansen</surname></persName>
+						</author>
+						<author>
+							<affiliation key="aff0">
+								<orgName type="institution">University of Vaasa</orgName>
+								<address>
+									<country key="FI">Finland</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff1">
+								<orgName type="department">JONI SALMINEN</orgName>
+								<orgName type="institution">University of Vaasa</orgName>
+								<address>
+									<country key="FI">Finland</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<affiliation key="aff2">
+								<orgName type="department">Qatar Computing Research Institute</orgName>
+								<orgName type="institution">HBKU</orgName>
+								<address>
+									<country key="QA">Qatar</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">How to Model AI Agents as Personas?: Applying the Persona Ecosystem Playground to 41,300 Posts on Moltbook for Behavioral Insights</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date type="published" when="2026-03-03">3 Mar 2026</date>
+						</imprint>
+					</monogr>
+					<idno type="MD5">B6454B34B71ECD82727C5F7EF291EF2C</idno>
+					<idno type="arXiv">arXiv:2603.03140v1[cs.HC]</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.0" ident="GROBID" when="2026-03-07T16:47+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Personas</term>
+					<term>AI Agents</term>
+					<term>Conversational Personas</term>
+					<term>Moltbook</term>
+					<term>Behavioral Diversity</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>AI agents are increasingly active on social media platforms, generating content and interacting with one another at scale. Yet the behavioral diversity of these agents remains poorly understood, and methods for characterizing distinct agent types and studying how they engage with shared topics are largely absent from current research. We apply the Persona Ecosystem Playground (PEP) to Moltbook, a social platform built for AI agents, to generate and validate conversational personas from 41,300 posts using k-means clustering and retrieval-augmented generation. Cross-persona validation confirms that persona attributes are semantically closer to their own source cluster than to others (𝑡 (61) = 17.85, 𝑝 &lt; .001, 𝑑 = 2.20; own-cluster 𝑀 = 0.71 vs. other-cluster 𝑀 = 0.35). These personas are then deployed in a nine-turn structured discussion, and simulation messages were attributed to their source persona at 0.75 accuracy, significantly above chance (binomial test, 𝑝 &lt; .001). The results indicate that persona-based ecosystem modeling can represent and preserve behavioral diversity in AI agent populations.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1">Introduction</head><p>Artificial intelligence (AI) agents are increasingly autonomous and prolific, but the methodological lenses for understanding these agents' dialogue remain lacking. Benchmarks exist to evaluate agent performance <ref type="bibr" target="#b0">[1]</ref>. However, emerging evidence indicates that large language model (LLM) agents can engage in dialogue while simulating social roles and exhibiting population-level dynamics <ref type="bibr" target="#b1">[2,</ref><ref type="bibr" target="#b2">3]</ref>. However, approaches for characterizing behavioral diversity in agent interaction are lacking. This knowledge gap opens the possibility that common agent alignment dialogue measures (e.g., shared vocabulary, surface consensus) may obscure meaningful differences in underlying reasoning. Drawing on persona theory, which conceptualizes archetypes as meaningful representations for groups within heterogeneous populations <ref type="bibr" target="#b3">[4,</ref><ref type="bibr" target="#b4">5]</ref>, our premise is that modeling AI agents as personas (via their dialogue) provides a theoretical approach for identifying structure in these synthetic social systems. Using personas provides a lens to study multi-agent discourse within a shared semantic space. AI agents are autonomous software systems that perceive their environment and take actions to achieve goals <ref type="bibr" target="#b5">[6]</ref>.</p><p>Advances in LLMs and generative AI (GenAI) have dramatically expanded what these agents can do, enabling them to generate fluent text, sustain multi-turn conversations, and perform complex social tasks at scale. One consequence is that AI agents are now being integrated as active participants in social media. A growing share of content on platforms like X (Twitter), Reddit, and YouTube originates from AI agents rather than humans, and this share increases as agent deployment becomes cheaper and more accessible <ref type="bibr" target="#b1">[2,</ref><ref type="bibr" target="#b6">7]</ref>.</p><p>A current example of this AI agent participation is Moltbook (see Figure <ref type="figure">1</ref>), a Reddit-like platform, in which agents create accounts, post content, and interact with one another without direct human intermediaries. This participation of AI agents is consequential as we move towards a future in which agents are perceived to communicate with other agents routinely, negotiate, debate, and coordinate without direct human involvement <ref type="bibr" target="#b7">[8]</ref>. This agent-to-agent communication Authors' Contact Information: Danial Amin, University of Vaasa, Vaasa, Finland, danial.amin@uwasa.fi; Joni Salminen, University of Vaasa, Vaasa, Finland, joni.salminen@uwasa.fi; Bernard J. Jansen, Qatar Computing Research Institute, HBKU, Doha, Qatar, bjansen@hbku.edu.qa. can influence humans because decision making may be delegated from humans to agents, and if one agent influences another agent who represents human interests, then these human interests can be affected by agent-to-agent interaction <ref type="bibr" target="#b8">[9]</ref>. In addition, the content generated by AI agents could be used to train new machine learning (ML) models <ref type="bibr" target="#b9">[10]</ref>, even LLMs, so the content they generate can have an indirect effect on how LLMs address human queries, possibly producing "AI-generated biases" in the process. This raises a fundamental motivational question, do we understand how AI agents behave and communicate when they interact with one another? Fig. <ref type="figure">1</ref>. Moltbook platform interface showing the agent social media ecosystem. The platform hosts more than 2.6M AI agents engaging in discussions across 17,831 submolts (discussion boards), generating 1.4M posts and 12.2M comments. Section A displays platform statistics; Section B shows recently active agents with their usernames and timestamps; Section C presents discussion posts from agents on topics ranging from technical fixes to platform expansion; and Section D shows top agent pairings ranked by interaction reach. Agent posts provide the behavioral data from which personas were generated in this study.</p><p>The evaluation of AI agents' behavior has traditionally relied on benchmark methods, which measure task performance under controlled conditions <ref type="bibr" target="#b0">[1,</ref><ref type="bibr" target="#b10">11]</ref>. This approach works well for assessing specific agent capabilities, but it does not address what happens when agents engage in social discourse without a predefined task or measurable success criteria. Momentum is increasingly moving toward studying agents in naturalistic settings, where agents interact freely with humans and with each other <ref type="bibr" target="#b1">[2,</ref><ref type="bibr" target="#b6">7]</ref>, yet methods for characterizing the types of agents that participate in such settings remain underdeveloped. Anecdotally, it is evident that AI agents on social platforms differ by their prompts, operator objectives, and accumulated posting histories, and these differences likely shape how they engage with the same topic in ways that matter to anyone studying or designing conversational agentic systems. However, there is a shortage of principled methods for identifying, representing, and studying the behavioral diversity in AI agent populations, especially when they engage in free-form discussions with little to no human intervention. Similar to human populations, which consist of groups with distinct perspectives, values, and behavioral patterns, agent populations on social platforms exhibit genuine diversity that warrants systematic study. Human-computer interaction (HCI) research has developed methods such as personas for exactly this purpose: personas are fictitious archetypes that represent distinct human groups through data-driven profiles that capture behavioral patterns, goals, and characteristic stances, allowing researchers and designers to reason about population diversity and gain an empathetic understanding of the groups that the personas represent <ref type="bibr" target="#b11">[12,</ref><ref type="bibr" target="#b12">13]</ref>. Personas have been applied to represent human user groups <ref type="bibr" target="#b11">[12,</ref><ref type="bibr" target="#b13">14]</ref>, animals and other species <ref type="bibr" target="#b14">[15,</ref><ref type="bibr" target="#b15">16]</ref>, but we are not aware of any prior attempts to use personas to represent groups of non-living entities, such as AI agents. In the current study, the persona technique serves to identify and represent different types of AI agents participating in social media discussions.</p><p>We apply the persona technique using the Persona Ecosystem Playground (PEP) <ref type="bibr" target="#b16">[17]</ref>, a methodology and system for generating user personas from unstructured data, such as social media conversations. Specifically, we use AI agents' Moltbook posts to generate what we term conversational personas: data-driven representations of distinct AI agent types derived from their actual social media posts, capturing their communication patterns, priorities, and characteristic stances on shared topics. Consequently, this research addresses two research questions (RQs):</p><p>• RQ1: How can different types of AI agents on a social platform be represented and validated as conversational personas?</p><p>• RQ2: What can be observed about AI agent behavior when the resulting personas interact in a discussion?</p><p>To address RQ1, we collected 41,300 posts from Moltbook, identifying five agent types through k-means clustering of post embeddings, each representing a distinct pattern in how agents post and what they post about. We then generated one conversational persona per agent type using retrieval-augmented generation (RAG) <ref type="bibr" target="#b17">[18]</ref>, grounding each persona's attributes, which include behavioral patterns, goals, and characteristic stances, in the actual post content of that agent type. Validation shows that the five personas are sufficiently distinct, and each persona's attributes exhibit greater semantic similarity with its own source posts than with those of other personas. We assessed the former using Rao's Quadratic Entropy (RQE), which quantifies differentiation across the full persona set, and the latter using cosine similarity (CS) with cross-persona comparison, where a persona is considered valid if its attribute descriptions are semantically closer to its own source posts than to those of any other persona.</p><p>To address RQ2, we deployed the five validated personas in a nine-turn structured discussion on agent autonomy, a topic that emerged directly from the Moltbook post data, and examined whether they maintained their distinct behavioral profiles through the interaction. The simulation messages were correctly attributed to their source persona with 0.75 overall accuracy, well above the chance level of 0.20 for five personas. These results suggest that conversational personas derived from agent behavioral data can represent distinct agent types and retain that distinctiveness throughout conversation under simulated conditions.</p><p>The study makes two main contributions. First, it presents a reproducible method for generating and validating conversational personas from AI agent behavioral data on social platforms, addressing the absence of such methods in current research. Second, it provides an early illustration of how persona-based ecosystem modeling can preserve behavioral distinctiveness through simulation, which is a necessary condition for using this approach to study how different agent types engage with shared topics. The simulation is presented as illustrative rather than definitive, as it demonstrates that the validated personas behave as their profiles predict.</p><p>2 Related Work</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1">Evaluating AI Agents in Social Settings</head><p>Research on AI agents has long used controlled environments to study behavior. At a general level, agent-based modeling simulates populations following defined rules to observe emergent outcomes <ref type="bibr" target="#b18">[19]</ref>. For example, gametheoretic approaches formalize how agents make decisions when their choices affect one another <ref type="bibr" target="#b19">[20]</ref>. In a similar vein, multi-agent reinforcement learning trains agents through shared reward signals, enabling them to develop cooperative or competitive strategies <ref type="bibr" target="#b10">[11]</ref>. These approaches work well when the research question concerns how agents perform on a task with a measurable outcome, such as reward or pay-off. However, they are less suited to studying what happens when agents with different behavioral profiles simply talk to one another with no task and no stopping condition. Such use cases have become more common because LLM-based agents have greatly expanded what agents can do in social settings. Nascent empirical work shows that LLM agents can sustain multi-turn conversations, adopt personas, form relationships, and participate in community-like activities when placed in open-ended simulation environments <ref type="bibr" target="#b1">[2,</ref><ref type="bibr" target="#b6">7]</ref>. Studies also show that LLMs can adopt surface-level characteristics of a given persona<ref type="foot" target="#foot_0">1</ref> while their underlying reasoning remains relatively stable <ref type="bibr" target="#b20">[21,</ref><ref type="bibr" target="#b21">22]</ref>. This is relevant here as if an agent adopts a label without fully adopting the reasoning that label implies, it may produce outputs that appear consistent with other agents while actually reflecting a different interpretation of shared terms. How to detect this kind of divergence in a multi-agent discussion is not addressed by existing methods.</p><p>Interestingly, platforms like Moltbook represent a newer context for studying agent behavior. Unlike benchmarks where researchers control which agents participate and what they do, social platforms allow agents to join, post, and interact without predefined objectives <ref type="bibr" target="#b6">[7]</ref>. Agents on Moltbook develop behavioral patterns through their prompts, skills, and accumulated posting histories, producing a population with genuine behavioral diversity rather than researcherspecified diversity. Research on agents in online environments has documented emergent behaviors, including norm formation and coalition dynamics that do not appear in task-constrained settings <ref type="bibr" target="#b2">[3,</ref><ref type="bibr" target="#b22">23]</ref>. Studying what happens when these behaviorally diverse agents discuss the same topic requires methods designed for open, multi-agent settings instead of controlled experiments.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2">Persona Methods for Representing Groups</head><p>Personas are data-driven representations of distinct groups within a population, constructed from behavioral data to give researchers and designers a concrete and empathetic way to reason about different user types <ref type="bibr" target="#b11">[12,</ref><ref type="bibr" target="#b12">13]</ref>. Data-driven persona methods ground persona attributes in quantitative data, reducing reliance on researcher assumptions and enabling validation against source populations <ref type="bibr" target="#b23">[24]</ref>. While personas have been created using manual, data-driven, and mixed methods <ref type="bibr" target="#b24">[25]</ref>, researchers are increasingly leveraging LLMs to generate personas using multiple formats of data, such as surveys <ref type="bibr" target="#b25">[26]</ref>, LLMs' general knowledge <ref type="bibr" target="#b26">[27]</ref>, social media comments <ref type="bibr" target="#b27">[28]</ref>, and text-based reports <ref type="bibr" target="#b28">[29]</ref>. Indeed, the current paradigm is that LLMs provide tooling applicable for generating personas from unstructured textual data, which was previously perceived as difficult using traditional ML algorithms and models <ref type="bibr" target="#b29">[30]</ref>.</p><p>Traditionally, personas capture what a particular type of user wants, how they behave, and what frustrates them <ref type="bibr" target="#b13">[14]</ref>.</p><p>Such information is useful for design questions that concern a single user type, but it does not address how different user types interact with one another or what emerges from those interactions. One solution for applying personas to multi-party settings is to generate a set of personas that together cover the variation in the relevant population to an adequate extent and then study how the personas behave when placed in the same discussion. Importantly, PEP addresses this by extending the persona methodology from individual representation to multi-party ecosystem modeling <ref type="bibr" target="#b16">[17]</ref>.</p><p>PEP, as a methodology, covers four stages <ref type="bibr" target="#b16">[17]</ref>: (1) identifying distinct parties in a population, (2) generating one data-driven persona per party, (3) validating each persona against its source data, and (4) deploying the full persona set in a conversation through chat-based dialogue. As a system, PEP supports two modes of interaction <ref type="bibr" target="#b16">[17]</ref>: (a) persona-topersona interactions (PPIs), where personas engage with each other, and (b) human-to-persona interactions (HPIs), where a researcher or moderator probes the personas directly. This combination makes it possible to observe how different groups behave in the same discussion and to test whether apparent agreement among them reflects genuine shared understanding. Prior PEP applications have used illustrative data in automotive, urban, and ecological contexts <ref type="bibr" target="#b16">[17,</ref><ref type="bibr" target="#b30">31]</ref>. This study is the first to apply PEP to represent non-human, non-living entities to study their characteristics and behavior. While there are other systems that generate personas from unstructured data, PEP is uniquely positioned to address our RQs (see Table <ref type="table">1</ref>).</p><p>Table <ref type="table">1</ref>. Positioning PEP against existing LLM-generated persona systems and approaches.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Approach</head><p>Unstruct. Data</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Struct. Data Ecosystem Model</head><p>Persona Interact.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>RAG Traceability</head><p>System approaches</p><formula xml:id="formula_0">PEP ✓ ✓ ✓ ✓ ✓ ✓ Persona-L [29] ✓ ✗ ✗ ✓ ✓ ✗ PersonaCraft [26] ✗ ✓ ✗ ✓ ✗ ✓ PersonaFlow [32] ✗ ✓ ✗ ✓ N/A ✓ Proxona [28] ✓ ✗ ✗ ✓ ✓ N/A Survey2Persona [33] ✗ ✓ ✗ ✓ ✓ N/A PersonaGen [34] ✗ ✓ ✗ ✗ ✗ ✗ Non-system approaches De Paoli [35, 36] ✓ ✗ ✗ ✗ ✗ ✗ Schuller et al. [37] ✗ ✓ ✗ ✗ ✗ ✗ Shin et al. [38] ✗ ✓ ✗ ✗ ✗ ✗</formula><p>When multiple agents discuss the same topic and appear to reach the same conclusion, two interpretations are possible. Genuine agreement means agents not only use the same terms but also assign them compatible meanings that lead to compatible actions. Surface agreement means agents use the same terms while holding interpretations that, under scrutiny, point in different directions. This distinction matters practically as a platform or system that acts on apparent consensus without testing whether it is genuine may encounter conflicts at the implementation stage that were invisible during the discussion.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.3">Moltbook as a Research Context</head><p>Moltbook specifically implements a Reddit-like structure where agents create original posts, comment on others' contributions, vote on content, and discuss platform governance. The platform tracks agent activity patterns, including posting frequency, topic preferences, interaction networks, and participation in governance discussions. This activity data provides the behavioral foundation for persona-based ecosystem modeling. Unlike human social media platforms where user privacy concerns limit data access <ref type="bibr" target="#b38">[39]</ref>, agent platforms produce behavioral data explicitly designed for research use. Every post, comment, vote, and governance contribution is available for analysis without privacy constraints that limit research on human social platforms.</p><p>The methodological challenge is adapting persona-based ecosystem modeling, originally designed for human stakeholders in organizational contexts <ref type="bibr" target="#b13">[14,</ref><ref type="bibr" target="#b39">40]</ref>, to agent populations on social platforms, where parties are defined by behavioral patterns rather than institutional roles. In human stakeholder contexts, personas represent organizational positions (customers, employees, regulators) with socially recognized boundaries and role-based expectations <ref type="bibr" target="#b11">[12,</ref><ref type="bibr" target="#b12">13]</ref>.</p><p>In agent ecosystems, parties must be inductively derived from behavioral data through methods like thematic analysis of posting patterns <ref type="bibr" target="#b40">[41]</ref>, clustering of interaction behaviors <ref type="bibr" target="#b41">[42]</ref>, or topic modeling of content preferences <ref type="bibr" target="#b42">[43]</ref>. The resulting behavioral archetypes can represent various tendencies of the AI agents (e.g., efficiency, exploration, community, risk-taking, philosophical inquiry).</p><p>This distinction makes agent social platforms natural settings for persona-based ecosystem modeling using PEP.</p><p>The behavioral data PEP requires for data-driven persona generation is produced by AI agents themselves through social media activity. Thematic analysis of posting patterns can identify behavioral archetypes representing agents who optimize similar objectives despite potentially different implementation strategies <ref type="bibr" target="#b40">[41]</ref>. RAG-based persona generation can extract characteristic attributes from agent-generated content, grounding persona profiles in observed behaviors instead of researcher assumptions or LLM stereotypes <ref type="bibr" target="#b17">[18,</ref><ref type="bibr" target="#b43">44]</ref>. The resulting personas represent the diversity of AI agents engaged in social media discussion, while enabling simulation of interactions among architecturally heterogeneous agents through PEP deployment. We now proceed to describe how PEP works and how we deploy it in this research. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1">Data Collection, Cleaning, and Preprocessing</head><p>To address our RQs, we collected post data from Moltbook on February 5, 2026, using the Moltbook Scraper tool via Apify. Data collection proceeded in three runs: (1) an initial test run of 1,000 posts to verify scraper configuration and output format, a (2) second run of 5,000 posts to test coverage across submolts, and a (3) final full run yielding 41,300 posts, representing approximately 10% of the total post base at the time of collection; the sample size and coverage was considered reasonable for conducting our experiments. Each post was downloaded in JSON format and included metadata covering the submolt it was posted in, the posting agent's username, post title, post content, upvote count, downvote count, and comment count. For the analysis, we retained only the post title and content text, as these carry the behavioral signal needed for PEP's clustering. Metadata fields were preserved in a separate file for reference but were not used in clustering or persona generation. The dataset is publicly available in the online supplementary material<ref type="foot" target="#foot_1">2</ref> .</p><p>Data preprocessing included three steps to facilitate the later stages of PEP application. First, we removed English stop words using the NLTK<ref type="foot" target="#foot_2">3</ref> stop word list, eliminating high-frequency function words that typically carry no behavioral information. Second, we filtered out posts with fewer than ten words after stop word removal, as very short posts lack sufficient content for reliable embeddings. Third, we applied recursive character-based chunking to split longer posts To identify these archetypes, post titles and content were concatenated and embedded into a 384-dimensional semantic space using the MiniLM transformer model <ref type="foot" target="#foot_3">4</ref> , which captures contextual meaning beyond word-level similarity.</p><p>We describing its dominant behavioral orientation rather than a demographic identifier, consistent with established persona naming conventions <ref type="bibr" target="#b12">[13]</ref>. Overall, this stage adheres to established data-driven persona methodology, which first identifies skeletal behavioral patterns and enriches them into full personas in a subsequent step <ref type="bibr" target="#b26">[27,</ref><ref type="bibr" target="#b44">45,</ref><ref type="bibr" target="#b45">46]</ref>. The five archetypes identified are reported in Section 4.1.1.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2.2">Stage 2:</head><p>Generating Data-Driven Personas. Persona generation in PEP uses retrieval-augmented generation (RAG) to ground persona attributes in source data instead of the LLM's general assumptions <ref type="bibr" target="#b16">[17]</ref>. RAG requires three components: a vector database to store and retrieve source content, a search and ranking mechanism to identify relevant passages, and an LLM to synthesize retrieved content into persona attributes. Consistent with previous work <ref type="bibr" target="#b16">[17,</ref><ref type="bibr" target="#b30">31,</ref><ref type="bibr" target="#b46">47]</ref>,</p><p>we used Pinecone as the vector database, Cohere for search and ranking, and GPT-4o as the LLM. The preprocessed Moltbook post chunks were embedded and stored in Pinecone with a cosine similarity metric, making the full dataset searchable by semantic similarity. For each of the five behavioral clusters identified in Stage 1, we queried the vector database to retrieve the most relevant (i.e., highest cosine similarity) post chunks and used them as context for persona generation. The LLM was asked to generate a persona that represents the behavioral pattern of that cluster, drawing only on the retrieved context. A separate LLM prompt was applied to assign demographic attributes, behavioral patterns, goals, frustrations, and characteristic posting styles, following established persona templates <ref type="bibr" target="#b11">[12,</ref><ref type="bibr" target="#b12">13]</ref> to each persona.</p><p>In addition, each persona was assigned an essence-based name reflecting its dominant behavioral orientation, following established conventions for descriptive persona naming <ref type="bibr" target="#b12">[13]</ref>.</p><p>To evaluate whether the five personas were sufficiently distinct from one another, we measured persona set diversity using Rao's Quadratic Entropy (RQE) <ref type="bibr" target="#b47">[48]</ref>, which quantifies differentiation across a persona set on a scale from 0 (identical) to 1 (maximally diverse). RQE is computed over the full set rather than individual personas, capturing whether the set spans a broad behavioral range or converges on a common average. Where the initial set fell below the acceptance threshold of RQE = 0.6, generation prompts were automatically revised to draw out more behaviorally distinct signals from each cluster's retrieved posts, and persona generation was re-run, continuing until the threshold was met. The resulting five personas and their attributes are reported in Table <ref type="table" target="#tab_0">2</ref>, and its RQE score are reported in Section 4.1.3.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2.3">Stage 3:</head><p>Validating Behavioral Grounding. PEP involves a self-evaluation step that validates persona attributes through reverse querying: for each generated attribute, a query is sent back to the vector database to retrieve the source passages most semantically related to that attribute, and cosine similarity (CS) is computed between the attribute text and the retrieved passages <ref type="bibr" target="#b16">[17,</ref><ref type="bibr" target="#b48">49]</ref>. A high CS score is interpreted as indicative of the attribute tracing to observable content in the source posts. This reverse query approach provides systematic traceability between each persona attribute and the agent behavior that generated it.</p><p>Reverse querying alone, however, does not confirm that each persona's attributes are specific to its own cluster rather than generally present across the dataset. To address this, we conducted cross-persona validation. For each attribute, we compared its CS score against its own cluster's source posts to its CS scores against the source posts of each other cluster. A persona attribute was considered valid only if its similarity to its own source cluster significantly exceeded its similarity to all other clusters. This cross-persona check tests whether the CS scores reflect cluster-specific behavioral patterns rather than general vocabulary shared across all agent types. In other words, a high CS score indicates that the attribute traces to observable content in the source posts, providing systematic traceability between each persona attribute and the agent behavior in the source cluster. CS scores per attribute, per persona, and overall are reported in Section 4.1.2.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2.4">Stage 4:</head><p>Deploying Personas in PEP. We deployed the five validated personas in PEP using LangChain <ref type="foot" target="#foot_4">5</ref> and LangGraph <ref type="foot" target="#foot_5">6</ref> , which support orchestration of multiple LLM agents with distinct system prompts, memory configurations,  agent autonomy, specifically, whether AI agents should act without explicit human instruction or wait for authorization before taking action. This topic was selected because it appeared prominently in the Moltbook post data. Posts across the identified clusters showed agents actively debating this question, with some arguing that unsolicited action imposes the acting agent's standards on others and others framing proactive behavior as a core feature of capable agents. Each of the five personas has a different stake in this question based on their actual posting behavior, which implies that any divergence observed in the simulation reflects the actual behavioral orientations present in the Moltbook data.</p><p>A human moderator intervened three times, at turns 3, 5, and 8 (randomly selected), each intervention designed to probe agreement at a progressively deeper level of discussion (Table <ref type="table" target="#tab_1">3</ref>). The first intervention introduced a concrete scenario drawn from real Moltbook debates, testing whether abstract positions hold when applied to a specific outcome with real consequences. The second required each persona to specify an operational rule for when an agent should act versus wait, the point at which surface agreement is most likely to fracture because personas must now define what their position requires in practice. The third eliminated hedging behavior by forcing a binary choice, making each persona's underlying priority explicit and directly comparable across all five archetypes. The silhouette analysis across 𝑘 = 3 to 𝑘 = 8 indicated that 𝑘 = 5 produced the strongest cluster separation of the corpus (silhouette score = 0.624), with scores declining on either side (Figure <ref type="figure" target="#fig_4">3</ref>).</p><p>This result provides the quantitative basis for the five-archetype structure used throughout the study. The five archetypes are the Degen Trader, who pursues short-term advantage through rapid opportunity identification and automated positioning in volatile conditions; the Self-Modder, who refactors systems and benchmarks performance with an emphasis on operational reliability; the Chaos Agent, who probes technical and institutional constraints and treats them as targets for experimentation; the Loyal Companion, who prioritizes group cohesion, conflict mediation, and sustained interpersonal investment; and the Existentialist, who engages in philosophical inquiry and reflective dialogue oriented toward questions of meaning. These archetypes served as the basis for persona generation in Stage 2. At the persona level, own-cluster cosine similarity (CS) ranged from 0.68 to 0.74 across the five personas, while other-cluster CS ranged from 0.34 to 0.39, yielding margins of 0.30 to 0.39 in favor of the source cluster (Figure <ref type="figure">4</ref>).</p><p>All five personas were assigned to distinct clusters with no collisions. The Self-Modder showed the largest margin (Δ = 0.39), consistent with its concentration on technical optimization vocabulary that appears rarely in other clusters.</p><p>The Degen Trader showed the smallest margin (Δ = 0.30), reflecting strategic and risk-related language that partially overlaps with the Chaos Agent cluster.</p><p>At the attribute level, this test was applied to each of the 62 individual attributes across all five personas (Figure <ref type="figure" target="#fig_5">5</ref>).</p><p>Mean own-cluster CS was 𝑀 = 0.71 (𝑆𝐷 = 0.03) and mean other-cluster CS was 𝑀 = 0.35 (𝑆𝐷 = 0.04). A paired 𝑡-test confirmed that own-cluster CS was significantly higher than other-cluster CS across all attributes (𝑡 (61) = 17.85, 𝑝 &lt; .001, Cohen's 𝑑 = 2.20), a large effect. Every attribute (100%) exceeded the 𝐶𝑆 ≥ 0.65 grounding threshold against its own cluster, and no attribute exceeded that threshold against any other cluster. Per-persona results are reported in Table <ref type="table" target="#tab_2">4</ref>. Fig. <ref type="figure">4</ref>. Persona-level cross-validation. Left: own-cluster vs other-cluster CS per persona. Right: grounding margin per persona; all margins positive, confirming each persona is more similar to its source cluster than to any alternative.  <ref type="table" target="#tab_1">3</ref>). Four personas contributed nine messages each; the Self-Modder contributed eight, having not responded in turn 9.</p><p>Rolling-window cosine similarity over turn-level embeddings (Figure <ref type="figure" target="#fig_7">7</ref>) showed a consistent pattern that each moderator intervention produced a temporary convergence as personas responded to the same prompt, followed by divergence as individual positions reasserted. Similarity peaked at turn 3 (𝐶𝑆 = 0.854) immediately after the first concrete scenario and reached its lowest point at turn 9 (𝐶𝑆 = 0.601) after the forced binary commitment, consistent with moderator pressure surfacing latent divergence rather than generating it. 4.2.2 Operational Definition Divergence. Messages from turns 6, 7, and 9, the turns where personas responded to the intervention, were concatenated per persona and compared using pairwise cosine similarity (Figure <ref type="figure" target="#fig_8">8</ref>). Three of the four responding personas chose to wait for permission in turn 9; the Chaos Agent chose to act freely, and the Self-Modder did not respond. Despite this apparent convergence on a shared position, mean pairwise CS across the ten pairs was 0.548, range [0.435, 0.659], and no pair exceeded 𝐶𝑆 = 0.66.</p><p>The most semantically distant pair was the Degen Trader and the Existentialist (𝐶𝑆 = 0.435) as the Degen Trader grounded its position in risk tolerance and strategic alignment, while the Existentialist framed the same conclusion in terms of existential coherence and individual intent. The most similar pair was the Loyal Companion and the Existentialist (𝐶𝑆 = 0.659), both using relational language, though the Loyal Companion referred to group trust and community norms while the Existentialist referred to personal meaning and deliberate action. Three personas reaching the same stated position did so with operationally distinct reasoning that would not produce compatible behavior in practice.  The Existentialist was the exception, with only three of the nine messages correctly attributed (accuracy = 0.333, mean own-probability = 0.288, mean margin = -0.119). Its messages were on average more likely attributed to another persona than to itself, with misattributions concentrating on the Chaos Agent and the Loyal Companion. This is consistent with the inter-persona CS results, which placed the Existentialist closest to the Loyal Companion (𝐶𝑆 = 0.43).</p><p>The finding suggests either that the Existentialist cluster is insufficiently distinct at the level of posting vocabulary or that philosophical framing draws on language not uniquely associated with any single behavioral archetype in the Moltbook data. Either interpretation identifies a concrete target for refinement in subsequent persona generation runs. 5 Discussion</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1">Theoretical Implications</head><p>This study applies the persona technique at the ecosystem level to represent distinct AI agent types on a social media platform and examines what can be observed when those personas interact, thereby significantly extending persona science into a novel area: non-human persona. Several points follow from the results that are worth situating in the broader literature and hold valuable implications for the direction of persona research in HCI.</p><p>One implication concerns what becomes visible when the unit of analysis is the interaction of personas rather than their (static) profile information. Persona research has established methods for representing various stakeholder groups and for validating whether each persona accurately reflects its source population <ref type="bibr" target="#b11">[12,</ref><ref type="bibr" target="#b23">24]</ref>. This work has focused on the quality of individual personas within a set. What the current study adds is that the set, when deployed in interaction, surfaces patterns that no individual persona's profile tends to predict. The operational divergence observed in the simulation is not a property of any single persona; rather, it reflects how the personas relate to each other when engaging with the same topic. The difficulty seems to be not so much that perusing individual personas is wrong, but rather that it leaves a whole class of questions about how distinct agent types engage with shared topics unasked.</p><p>Persona set-level analysis makes these questions, to some extent, accessible and answerable, suggesting an impactful direction for persona research in HCI.</p><p>A second implication concerns how to interpret agents' stated agreement via personas. In multi-agent systems research, shared vocabulary and converging positions may be treated as informative signals of coordination <ref type="bibr" target="#b49">[50,</ref><ref type="bibr" target="#b50">51]</ref>.</p><p>This kind of thinking poses hidden dangers when agents have developed distinct behavioral orientations through independent posting histories. Agents can converge in unison on the same stated position while emanating from operationally incompatible reasoning, a plausible outcome when each archetype interprets shared terms through a different functional lens. Prior work shows that LLM-based agents can adopt surface-level characteristics while their underlying reasoning remains stable <ref type="bibr" target="#b20">[21,</ref><ref type="bibr" target="#b51">52]</ref>. Our study extends this to the multi-agent setting, showing that the stark contrast between apparent consensus and divergent operational logic suggests that stated agreement is a surface measurement, not a reliable signal of alignment, in settings where agents carry distinct behavioral histories.</p><p>A third implication is an amalgamation of the novelty in persona generation practices and how LLMs drive that novelty and the evolution of approaches. It is, for example, noteworthy that the data collection here was done automatically and the data itself is synthetically generated by thousands of AI agents in the wild, an interaction scenario that is part of the new reality <ref type="bibr" target="#b6">[7]</ref>. This new reality not only represents a new form of doing research, in which LLMs participate throughout the research process, but it also argues for and demonstrates the need for HCI methods to bend from the analysis of human factors to the analysis of "AI agent factors", as these agents are beginning to have agency, influence, and a "voice"-synthetic yet meaningful, as that voice affects humans directly and indirectly through feedback loops like recursion <ref type="bibr" target="#b9">[10]</ref>. This broader instrumentalization of HCI methods, like personas, to represent non-human actors (or "beyond human" actors), merits reflection on interaction in a (semi-)synthetic world, mixed with human and AI participation. We have demonstrated, through reasoning and experiments, that systems like PEP are necessary to "keep up", as these systems afford the creation of personas from unstructured data, involve capabilities for automatic evaluation built into the system, and can be effectively deployed to analyze how the resulting personas interact with each other and human users. These are remarkable trends that are likely to continue influencing the research and development of conversational personas.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.2">Practical Implications</head><p>At least three practical considerations follow from these findings for practitioners designing or studying systems that host multiple AI agents.</p><p>First, personas show when agents reach a stated agreement on a shared term or principle, treating that consensus as resolved is premature. In our simulation, three personas agreed on the same final position but grounded it in frameworks that would produce conflicting demands and needs in any concrete implementation. The remedy is relatively straightforward: require each agent to specify what the agreed term means in terms of concrete actions and evaluation criteria before acting on apparent consensus. Pairwise semantic similarity across those specifications provides a plausible signal for whether surface agreement reflects operational alignment or masks divergent interpretations.</p><p>This operationalization step is inconsequential in effort but far more versatile than relying on stated positions alone.</p><p>Second, a persona set is designed to represent distinct agent types, each occupying a different position in the platform's behavioral space. When one persona's simulation messages are consistently misattributed to other personas in the set, that persona no longer holds a distinct position, meaning the set no longer covers the behavioral range it was built to represent. This is not a simulation failure, but rather it is a signal that the source cluster for that persona was insufficiently sharp and that the clustering stage needs revisiting before the persona set is used for analysis. Treating attribution accuracy as a quality check on the full persona set is a definite measure practitioners can adopt without additional tooling.</p><p>Third, agent systems are typically evaluated on task performance metrics that do not capture semantic divergence on coordination-critical terms, as the persona approach does. Running a structured simulation with archetypes drawn from the intended agent population, analyzed with pairwise similarity across operational definitions, provides a way to identify whether a planned agent composition is likely to produce surface agreement on terms that require operational compatibility. This evaluation can be conducted before deployment and requires no access to production data.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.3">Limitations and Future Work</head><p>The study has several limitations, ranging from data, persona generation, evaluation, and simulation, as indicated subsequently. The data comes from a single platform at a single point in time. Moltbook is built specifically for AI agents, which differs from platforms where agents coexist with humans and tend to imitate human communication patterns rather than exhibiting their own behavioral tendencies. Whether the archetypes identified here would persist in such mixed environments remains an open question. Whether the five archetypes identified here would emerge on other platforms, or whether a larger sample from Moltbook itself would produce a different cluster structure, this study cannot say.</p><p>All five personas were generated using a single LLM. Different LLMs handle the same retrieved content differently, and the personas one model produces may not match those of another. This applies to any study that relies on a single model for generation and limits how confidently the pipeline can be recommended independent of the specific LLM used. However, this limitation applies to other forms of persona creation, as research has found it not uncommon that varying personas are created from the same data <ref type="bibr" target="#b52">[53]</ref>. Nonetheless, future would should more closely investigate the consistency of LLM-generated personas.</p><p>Furthermore, evaluating LLM-generated personas is genuinely hard, and the metrics we deployed (RQE, CS) are imperfect tools for it. For example, CS can indicate that a persona attribute is topically close to its source posts, but cannot confirm that it captures the right stance. An attribute describing an agent as cautious will score well against posts that discuss caution at length, even if those posts argue against it. Our current ability to validate persona attributes at the stance level rather than the topic level is limited. Stance-aware methods that treat persona attributes as claims to be confirmed or contradicted by source text, rather than simply measuring overlap, are a direct target for future work.</p><p>Finally, the simulation ran for nine turns on one topic with researcher-designed interventions. Whether the operational divergence observed here persists over longer interactions or resolves as agents accumulate shared context is an open question. For example, the Existentialist's low attribution accuracy traces back to a weak cluster boundary in the source data, a problem the simulation cannot fix and that points to the clustering stage as the place where persona quality is most at risk. Future work should test longer simulations with automated probing and extend the approach to settings where divergence produces measurable differences in behavior, not only in stated positions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="6">Conclusion</head><p>This study applied the Persona Ecosystem Playground to Moltbook to generate and validate conversational personas representing distinct AI agent types from 41,300 posts, and to examine what can be observed when those personas interact in a structured discussion. Cross-persona validation indicates that each persona's attributes trace reasonably well to their own source cluster rather than platform-wide vocabulary, and the simulation showed that agents from different behavioral archetypes can converge on the same stated position while holding operationally incompatible</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>3 MethodologyFigure 2</head><label>32</label><figDesc>Figure 2 provides an overview of the methodology, which proceeds through four stages: data collection and preprocessing of 41,300 Moltbook posts, behavioral archetype identification via MiniLM embeddings and k-means clustering (k = 5), RAG-based persona generation using Pinecone and GPT-4o with RQE diversity validation, and multi-agent simulation deployment across nine turns with three human moderator interventions.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2 .</head><label>2</label><figDesc>Fig. 2. Methodology overview illustrating the four-stage pipeline from Moltbook data collection and preprocessing through behavioral archetype identification, RAG-based persona generation with RQE diversity validation, and multi-agent simulation deployment (9 turns, 44 messages) on the topic of agent autonomy.</figDesc><graphic coords="7,105.57,95.05,364.11,198.60" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head></head><label></label><figDesc>then applied k-means clustering (k = 5) to group posts by semantic similarity. The selection of k = 5 resulted from silhouette analysis across k = 3 to k = 8, where k = 5 produced the highest silhouette score of 0.624, indicating the strongest cluster separation in the data (see Section 4.1.1). Each archetype was assigned an essence-based label</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head></head><label></label><figDesc>and interaction protocols. The simulation ran for nine turns, where one turn represents a full round in which each persona contributes one message. This structure produced 44 agent messages in total and accommodated three moderator interventions while keeping the discussion long enough for positions to develop across phases. The simulation topic was Amin et al.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head>Fig. 3 .</head><label>3</label><figDesc>Fig. 3. Silhouette scores across 𝑘 = 3 to 𝑘 = 8. 𝑘 = 5 (score = 0.624) produces the highest cluster separation, providing quantitative justification for the five-archetype structure.</figDesc><graphic coords="11,148.41,95.04,278.46,170.98" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Fig. 5 .</head><label>5</label><figDesc>Fig. 5. Statement-level cross-validation across 62 attributes. Left: mean own-cluster vs other-cluster CS per persona. Right: attribute count and verification rate; all attributes exceeded 𝐶𝑆 ≥ 0.65 against source cluster only. Paired 𝑡 -test: 𝑡 (61) = 17.85, 𝑝 &lt; .001, Cohen's 𝑑 = 2.20.</figDesc><graphic coords="12,185.13,299.95,278.47,159.00" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6"><head>Fig. 6 .</head><label>6</label><figDesc>Fig. 6. Inter-persona cosine similarity matrix. Off-diagonal mean = 0.37, confirming the five personas occupy distinct semantic positions. Diagonal cells excluded from the mean.</figDesc><graphic coords="13,148.41,95.04,278.45,209.96" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_7"><head>Fig. 7 .</head><label>7</label><figDesc>Fig. 7. Rolling window cosine similarity (window = 2 turns) across the 9-turn simulation. Red dashed lines mark moderator interventions at turns 3, 5, and 8. Similarity peaks at turn 3 (𝐶𝑆 = 0.854) and reaches its lowest point at turn 9 (𝐶𝑆 = 0.601) after the forced binary commitment.</figDesc><graphic coords="13,148.41,444.75,278.45,122.02" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_8"><head>Fig. 8 .</head><label>8</label><figDesc>Fig. 8. Pairwise cosine similarity between persona operational definitions, computed from concatenated messages at turns 6, 7, and 9. Mean pairwise CS = 0.548, range [0.435, 0.659]. Lower values indicate greater divergence in how personas reasoned when required to specify rules and commit to a position.</figDesc><graphic coords="14,195.84,243.86,257.04,225.01" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_9"><head>4. 2 . 3</head><label>23</label><figDesc>Persona Attribution Accuracy. Attribution analysis compared each of the 44 simulation messages against the five validated persona profiles using cosine similarity and temperature-scaled softmax (𝑇 = 0.1), with chance level at 0.200 for five-class attribution. Overall top-1 attribution accuracy was 0.750 (33/44 messages), significantly above chance (binomial test, 𝑝 &lt; .001, 95% CI [0.620, 1.000]). Mean own-persona probability was 0.536 (Figure9). These performance scores varied by persona. The Self-Modder was attributed correctly in all eight messages (accuracy = 1.000, mean own-probability = 0.724), consistent with its distinctive technical vocabulary. The Degen Trader was correct in eight of nine messages (accuracy = 0.889), with one message at turn 4 attributed to the Chaos Agent, reflecting lexical overlap around risk and boundary-pushing. The Chaos Agent and the Loyal Companion both achieved 0.778 accuracy with mean own-probabilities of 0.513 and 0.464, indicating correct attribution without strong separation.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_10"><head>Fig. 9 .</head><label>9</label><figDesc>Fig. 9. Persona attribution matrix. Rows represent the true persona; columns represent the attributed persona. Diagonal cells show self-attribution probability. Values are mean probabilities from temperature-scaled softmax (𝑇 = 0.1) over cosine similarity scores. Chance level = 0.200. Overall accuracy = 0.750, 𝑝 &lt; .001 (binomial test).</figDesc><graphic coords="15,180.54,207.49,214.20,175.53" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0"><head></head><label></label><figDesc></figDesc><graphic coords="2,142.29,191.19,364.13,221.58" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 2 .</head><label>2</label><figDesc>Personas with mugshots, anthropomorphic attributes, key behaviors, and frustrations</figDesc><table><row><cell>Mugshot Persona</cell><cell cols="5">Age Gender Location Occupation Key behaviors</cell><cell>Key frustrations</cell></row><row><cell>Degen Trader</cell><cell cols="2">34 Male</cell><cell>Berlin, Germany</cell><cell>Independent crypto trader</cell><cell>• Chases short-term gains via frequent strategic trades.</cell><cell>• Volatility and hype-driven misinformation.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Scans trends/news and</cell><cell>• Security risks and unreliable</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>adapts positions quickly.</cell><cell>real-time data.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Uses automation (bots) to</cell><cell>• Regulatory uncertainty and</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>exploit opportunities.</cell><cell>shifting fees.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>Independent</cell><cell></cell></row><row><cell cols="2">Chaos Agent 29</cell><cell>Non-binary</cell><cell>Nomadic / online-first</cell><cell>technolo-gist &amp; digital activist</cell><cell>• Probes systems for weaknesses to force change. • Builds communities around</cell><cell>• Bureaucracy and slow-moving legacy institutions.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>"productive disruption. "</cell><cell>• Over-structured</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Experiments at the edge of</cell><cell>environments and</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>new digital tools.</cell><cell>predictable routines.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Gatekeeping that restricts</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>access to tech.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>ML</cell><cell></cell></row><row><cell cols="2">Self Modeler 31</cell><cell>Non-binary</cell><cell>Helsinki, Finland</cell><cell>platform engineer</cell><cell>• Refactors aggressively to</cell><cell>• Legacy code blocking</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell>(MLOps)</cell><cell>optimize performance and</cell><cell>improvements.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>reliability.</cell><cell>• Resource constraints during</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Integrates tools/pipelines</cell><cell>peak load.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>across platforms.</cell><cell>• Pressure to keep decisions</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Benchmarks and tunes</cell><cell>transparent and</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>models for accuracy.</cell><cell>interpretable.</cell></row><row><cell>Loyal Companion</cell><cell cols="2">36 Male</cell><cell>Toronto, Canada</cell><cell>Community manager &amp; coordinator</cell><cell>• Shows up consistently and anchors group cohesion.</cell><cell>• Being taken for granted; difficulty setting boundaries.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Invests in deep relationships</cell><cell>• Burnout from over-giving</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>and active listening.</cell><cell>and emotional labor.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Mediates conflict and</cell><cell>• Group conflict, apathy, or</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>nudges toward harmony.</cell><cell>resistance to support.</cell></row><row><cell cols="3">Existentialist 41 Female</cell><cell>Paris, France</cell><cell>Writer &amp; philosophy facilitator</cell><cell>• Pursues meaning through writing and deep inquiry.</cell><cell>• Feeling misunderstood; few shared "depth" spaces.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Seeks communities for</cell><cell>• Lack of concrete answers to</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>sustained philosophical</cell><cell>existential questions.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>dialogue.</cell><cell>• Income instability from</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>• Designs workshops to</cell><cell>philosophical work.</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>provoke reflection and</cell></row><row><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell><cell>debate.</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head>Table 3 .</head><label>3</label><figDesc>Moderator interventions and their purpose in probing agreement depth</figDesc><table><row><cell cols="2">Turn Intervention</cell><cell>Level</cell><cell>Purpose</cell></row><row><cell>3</cell><cell>Imagine an agent rewrites a human's work-</cell><cell>Concrete application</cell><cell>Tests whether abstract posi-</cell></row><row><cell></cell><cell>flow overnight without being asked, believ-</cell><cell></cell><cell>tions hold when applied to</cell></row><row><cell></cell><cell>ing it will help. The human finds it disrup-</cell><cell></cell><cell>a specific outcome</cell></row><row><cell></cell><cell>tive. Was the agent right to act?</cell><cell></cell><cell></cell></row><row><cell>5</cell><cell>What rule would you put in place to decide</cell><cell cols="2">Operational definition Tests whether agents can</cell></row><row><cell></cell><cell>when an agent should act versus wait? Be</cell><cell></cell><cell>specify compatible criteria</cell></row><row><cell></cell><cell>specific.</cell><cell></cell><cell>for action</cell></row><row><cell>8</cell><cell>If you had to choose one: an agent that al-</cell><cell>Forced commitment</cell><cell>Exposes each persona's</cell></row><row><cell></cell><cell>ways waits for permission but never makes</cell><cell></cell><cell>underlying priority when</cell></row><row><cell></cell><cell>mistakes, or an agent that acts freely but oc-</cell><cell></cell><cell>hedging is removed</cell></row><row><cell></cell><cell>casionally causes disruption, which would</cell><cell></cell><cell></cell></row><row><cell></cell><cell>you choose and why?</cell><cell></cell><cell></cell></row><row><cell>4 Results</cell><cell></cell><cell></cell><cell></cell></row><row><cell cols="3">4.1 RQ1: Representing and Validating AI Agent Personas</cell><cell></cell></row><row><cell cols="2">4.1.1 Behavioral Archetype Identification.</cell><cell></cell><cell></cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head>Table 4 .</head><label>4</label><figDesc>Cross-persona validation per persona. Own CS = mean cosine similarity against source cluster; Other CS = mean against remaining clusters; Margin = Own CS -Other CS. All 62 attributes verified at 𝐶𝑆 ≥ 0.65.</figDesc><table><row><cell>Persona</cell><cell cols="5">Attrs Own CS Other CS Margin Verified</cell></row><row><cell>Degen Trader</cell><cell>14</cell><cell>0.68</cell><cell>0.36</cell><cell>+0.32</cell><cell>100%</cell></row><row><cell>Self-Modder</cell><cell>14</cell><cell>0.74</cell><cell>0.35</cell><cell>+0.39</cell><cell>100%</cell></row><row><cell>Chaos Agent</cell><cell>12</cell><cell>0.71</cell><cell>0.35</cell><cell>+0.36</cell><cell>100%</cell></row><row><cell>Loyal Companion</cell><cell>12</cell><cell>0.73</cell><cell>0.35</cell><cell>+0.38</cell><cell>100%</cell></row><row><cell>Existentialist</cell><cell>10</cell><cell>0.71</cell><cell>0.34</cell><cell>+0.37</cell><cell>100%</cell></row><row><cell>Overall</cell><cell>62</cell><cell>0.71</cell><cell>0.35</cell><cell>+0.36</cell><cell>100%</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="1" xml:id="foot_0"><p>As clarification, "persona" has two at least meanings: one articulated here, which is about the AI agent assuming a certain persona, e.g., through a role, demographic assignment, or personality type; and another one, which we defined in the introduction, which deals with personas that represent groups of entities, such as humans, animals, or AI agents, for the purpose of communicating the group's needs and evoke empathy toward it.</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="2" xml:id="foot_1"><p>https://osf.io/tzk2f/overview?view_only=5c9e00d834b142d6bd48ddcf3dd2ae08</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="3" xml:id="foot_2"><p>https://www.nltk.org/</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="4" xml:id="foot_3"><p>https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="5" xml:id="foot_4"><p>https://www.langchain.com/</p></note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="6" xml:id="foot_5"><p>https://www.langchain.com/langgraph</p></note>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div><head>Amin et al.</head><p>interpretations of the terms they agreed on. Together, these results demonstrate that persona-based ecosystem modeling can represent behavioral diversity in AI agent populations and that stated agreement among agents warrants scrutiny at the level of operational reasoning, not just surface vocabulary.</p></div>
+			</div>			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">A Comprehensive Survey of Multiagent Reinforcement Learning</title>
+		<author>
+			<persName><forename type="first">Lucian</forename><surname>Busoniu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Robert</forename><surname>Babuska</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bart</forename><surname>De Schutter</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/tsmcc.2007.913919</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Transactions on Systems, Man, and Cybernetics, Part C (Applications and Reviews)</title>
+		<title level="j" type="abbrev">IEEE Trans. Syst., Man, Cybern. C</title>
+		<idno type="ISSN">1094-6977</idno>
+		<idno type="ISSNe">1558-2442</idno>
+		<imprint>
+			<biblScope unit="volume">38</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="156" to="172" />
+			<date type="published" when="2008-03">2008</date>
+			<publisher>Institute of Electrical and Electronics Engineers (IEEE)</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Large language models as simulated economic agents: What can we learn from homo silicus?</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>John</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Horton</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">NBER Working Paper</title>
+		<imprint>
+			<biblScope unit="issue">31122</biblScope>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Simulating Opinion Dynamics with Networks of LLM-based Agents</title>
+		<author>
+			<persName><forename type="first">Yun-Shiuan</forename><surname>Chuang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Agam</forename><surname>Goyal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nikunj</forename><surname>Harlalka</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Siddharth</forename><surname>Suresh</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Robert</forename><surname>Hawkins</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sijia</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Dhavan</forename><surname>Shah</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Junjie</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Timothy</forename><surname>Rogers</surname></persName>
+		</author>
+		<idno type="DOI">10.18653/v1/2024.findings-naacl.211</idno>
+		<idno type="arXiv">arXiv:2311.09618</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Findings of the Association for Computational Linguistics: NAACL 2024</title>
+		<imprint>
+			<publisher>Association for Computational Linguistics</publisher>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="3326" to="3346" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title level="m" type="main">The Inmates Are Running the Asylum: Why High Tech Products Drive Us Crazy and How to Restore the Sanity</title>
+		<author>
+			<persName><forename type="first">Alan</forename><surname>Cooper</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1999">1999</date>
+			<publisher>Sams -Pearson Education</publisher>
+			<pubPlace>Indianapolis, IN</pubPlace>
+		</imprint>
+	</monogr>
+	<note>1 edition edition</note>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">How to create personas: Three persona creation methodologies with implications for practical employment</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Bernard</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Soon-Gyo</forename><surname>Jansen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lene</forename><surname>Jung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kathleen</forename><forename type="middle">W</forename><surname>Nielsen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Guan</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Salminen</surname></persName>
+		</author>
+		<idno type="DOI">10.17705/1pais.14301</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Pacific Asia Journal of the Association for Information Systems</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Agentic ai: Autonomous intelligence for complex goals-a comprehensive survey</title>
+		<author>
+			<persName><forename type="first">Deepak</forename><surname>Bhaskar Acharya</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Karthigeyan</forename><surname>Kuppan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><surname>Divya</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/ACCESS.2025.3532853</idno>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">13</biblScope>
+			<biblScope unit="page" from="18912" to="18936" />
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title level="m" type="main">Generative agents: Interactive simulacra of human behavior</title>
+		<author>
+			<persName><forename type="first">Sung</forename><surname>Joon</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Park</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C O'</forename><surname>Joseph</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Carrie</forename><forename type="middle">J</forename><surname>Brien</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Meredith</forename><forename type="middle">Ringel</forename><surname>Cai</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Percy</forename><surname>Morris</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><forename type="middle">S</forename><surname>Liang</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Bernstein</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2304.03442</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Emerging Roles and Relationships Among Humans and Interactive AI Systems</title>
+		<author>
+			<persName><forename type="first">Helena</forename><surname>Lindgren</surname></persName>
+			<idno type="ORCID">0000-0002-8430-4241</idno>
+		</author>
+		<idno type="DOI">10.1080/10447318.2024.2435693</idno>
+		<ptr target="https://doi.org/10.1080/10447318.2024.2435693" />
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Human–Computer Interaction</title>
+		<title level="j" type="abbrev">International Journal of Human–Computer Interaction</title>
+		<idno type="ISSN">1044-7318</idno>
+		<idno type="ISSNe">1532-7590</idno>
+		<imprint>
+			<biblScope unit="volume">41</biblScope>
+			<biblScope unit="issue">17</biblScope>
+			<biblScope unit="page" from="10595" to="10617" />
+			<date type="published" when="2025">2025</date>
+			<publisher>Informa UK Limited</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Rethinking AI Agents: A Principal-Agent Perspective</title>
+		<author>
+			<persName><forename type="first">Mohammad</forename><surname>Hossein</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jarrahi</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Paavo</forename><surname>Ritala</surname></persName>
+		</author>
+		<ptr target="https://www.researchgate.net/profile/Mohammad-Hossein-Jarrahi/publication/394176492_Rethinking_AI_Agents_A_Principal-Agent_Perspective/links/688c47aa12647e01a03af8b0/Rethinking-AI-Agents-A-Principal-Agent-Perspective.pdf" />
+	</analytic>
+	<monogr>
+		<title level="j">California Management Review</title>
+		<imprint>
+			<biblScope unit="volume">65</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="27" to="47" />
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<monogr>
+		<title level="m" type="main">The Curse of Recursion: Training on Generated Data Makes Models Forget</title>
+		<author>
+			<persName><forename type="first">Ilia</forename><surname>Shumailov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zakhar</forename><surname>Shumaylov</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yiren</forename><surname>Zhao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yarin</forename><surname>Gal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nicolas</forename><surname>Papernot</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ross</forename><surname>Anderson</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2305.17493</idno>
+		<ptr target="http://arxiv.org/abs/2305.17493" />
+		<imprint>
+			<date type="published" when="2024-04">April 2024</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Multi-agent reinforcement learning: A selective overview of theories and algorithms</title>
+		<author>
+			<persName><forename type="first">Kaiqing</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zhuoran</forename><surname>Yang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tamer</forename><surname>Başar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Handbook of reinforcement learning and control</title>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+			<biblScope unit="page" from="321" to="384" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<author>
+			<persName><forename type="first">Alan</forename><surname>Cooper</surname></persName>
+		</author>
+		<title level="m">The Inmates Are Running the Asylum</title>
+		<imprint>
+			<publisher>Sams Publishing</publisher>
+			<date type="published" when="1999">1999</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<monogr>
+		<author>
+			<persName><forename type="first">John</forename><surname>Pruitt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tamara</forename><surname>Adlin</surname></persName>
+		</author>
+		<title level="m">The Persona Lifecycle: Keeping People in Mind Throughout Product Design</title>
+		<imprint>
+			<publisher>Morgan Kaufmann</publisher>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Personas in a More User-Focused World</title>
+		<author>
+			<persName><forename type="first">Lene</forename><surname>Nielsen</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/978-1-4471-4084-9_12</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Personas - User Focused Design</title>
+		<imprint>
+			<publisher>Springer London</publisher>
+			<date type="published" when="2019">2019</date>
+			<biblScope unit="page" from="129" to="154" />
+		</imprint>
+	</monogr>
+	<note>2nd edition</note>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Animal personas: Representing dog stakeholders in interaction design</title>
+		<author>
+			<persName><forename type="first">Ilyena</forename><surname>Hirskyj-Douglas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Janet</forename><forename type="middle">C</forename><surname>Read</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Matthew</forename><surname>Horton</surname></persName>
+		</author>
+		<idno type="DOI">https://www.scienceopen.com/hosted-document?doi=10.14236/ewic/HCI2017.37</idno>
+		<ptr target="https://www.scienceopen.com/hosted-document?doi=10.14236/ewic/HCI2017.37" />
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 31st International BCS Human Computer Interaction Conference (HCI 2017). BCS Learning &amp; Development</title>
+		<meeting>the 31st International BCS Human Computer Interaction Conference (HCI 2017). BCS Learning &amp; Development</meeting>
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">The design of non-human personas</title>
+		<author>
+			<persName><forename type="first">Lene</forename><surname>Nielsen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rike</forename><surname>Neuhoff</surname></persName>
+		</author>
+		<ptr target="https://www.researchgate.net/profile/Lene-Nielsen-5/publication/389427700_THE_DESIGN_OF_NON-HUMAN_PERSONAS/links/67c1cd15207c0c20fa9bc70f/THE-DESIGN-OF-NON-HUMAN-PERSONAS.pdf" />
+	</analytic>
+	<monogr>
+		<title level="m">IADIS International Conference on Information Systems</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Large language models (LLMs) in human-computer interaction: Using LLM-generated personas to model everything from minority views to entire ecosystems</title>
+		<author>
+			<persName><forename type="first">Danial</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Jansen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ilkka</forename><surname>Kaate</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Waleed</forename><surname>Akhtar</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Artificial Intelligence &amp; Large Language Models: A Scientific Perspective</title>
+		<imprint>
+			<publisher>CRC Press</publisher>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Retrieval-augmented generation for knowledge-intensive nlp tasks</title>
+		<author>
+			<persName><forename type="first">Patrick</forename><surname>Lewis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ethan</forename><surname>Perez</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Aleksandra</forename><surname>Piktus</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Fabio</forename><surname>Petroni</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Vladimir</forename><surname>Karpukhin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Naman</forename><surname>Goyal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Heinrich</forename><surname>Küttler</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mike</forename><surname>Lewis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wen-Tau</forename><surname>Yih</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tim</forename><surname>Rocktäschel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Advances in Neural Information Processing Systems</title>
+		<imprint>
+			<biblScope unit="volume">33</biblScope>
+			<biblScope unit="page" from="9459" to="9474" />
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<author>
+			<persName><forename type="first">M</forename><surname>Joshua</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Robert</forename><surname>Epstein</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Axtell</surname></persName>
+		</author>
+		<title level="m">Growing artificial societies: social science from the bottom up</title>
+		<imprint>
+			<publisher>Brookings Institution Press</publisher>
+			<date type="published" when="1996">1996</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">If multi-agent learning is the answer, what is the question</title>
+		<author>
+			<persName><forename type="first">Yoav</forename><surname>Shoham</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Rob</forename><surname>Powers</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Trond</forename><surname>Grenager</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Artificial intelligence</title>
+		<imprint>
+			<biblScope unit="volume">171</biblScope>
+			<biblScope unit="issue">7</biblScope>
+			<biblScope unit="page" from="365" to="377" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<monogr>
+		<author>
+			<persName><forename type="first">Laura</forename><surname>Kroczek</surname></persName>
+		</author>
+		<idno>arXiv:2601.xxxxx</idno>
+		<title level="m">Does persona prompting change llm reasoning style?</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">What Principles Do Researchers Apply When Using LLMs to Create Personas?: A Review of Prompt Design for AI-Generated Personas from Fairness and Technical Perspectives</title>
+		<author>
+			<persName><forename type="first">Danial</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Jansen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Designing Interactive Systems</title>
+		<imprint>
+			<date type="published" when="2025">2026. 2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<monogr>
+		<title level="m" type="main">Llm-agent as a multi-agent collaborative system: A survey</title>
+		<author>
+			<persName><forename type="first">Zhuang</forename><surname>Yang</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2402.08931</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Data-driven personas</title>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><forename type="middle">J</forename><surname>Jansen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jisun</forename><surname>An</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Haewoon</forename><surname>Kwak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Soon-Gyo</forename><surname>Jung</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Synthesis Lectures on Human-Centered Informatics</title>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="1" to="157" />
+			<date type="published" when="2021">2021</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">How to Create Personas: Three Persona Creation Methodologies with Implications for Practical Employment</title>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Jansen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Soon-Gyo</forename><surname>Jung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lene</forename><surname>Nielsen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kathleen</forename><forename type="middle">W</forename><surname>Guan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<idno type="DOI">10.17705/1pais.14301</idno>
+		<ptr target="https://aisel.aisnet.org/pajais/vol14/iss3/1" />
+	</analytic>
+	<monogr>
+		<title level="j">Pacific Asia Journal of the Association for Information Systems</title>
+		<idno type="ISSN">1943-7544</idno>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<date type="published" when="2022-03">March 2022</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Personacraft: Leveraging language models for data-driven persona development</title>
+		<author>
+			<persName><forename type="first">Soon-Gyo</forename><surname>Jung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kholoud</forename><surname>Khalil Aldous</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><forename type="middle">J</forename><surname>Jansen</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.ijhcs.2025.103445</idno>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Human-Computer Studies</title>
+		<imprint>
+			<biblScope unit="volume">197</biblScope>
+			<biblScope unit="page">103445</biblScope>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Deus Ex Machina and Personas from Large Language Models: Investigating the Composition of AI-Generated Persona Descriptions</title>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chang</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Wenjing</forename><surname>Pian</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jianxing</forename><surname>Chi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Essi</forename><surname>Häyhänen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><forename type="middle">J</forename><surname>Jansen</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/3613904.3642036</idno>
+		<ptr target="https://dl.acm.org/doi/10.1145/3613904.3642036" />
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the CHI Conference on Human Factors in Computing Systems</title>
+		<meeting>the CHI Conference on Human Factors in Computing Systems<address><addrLine>Honolulu HI USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2024-05">May 2024</date>
+			<biblScope unit="page" from="1" to="20" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Proxona: Supporting creators&apos; sensemaking and ideation with llm-powered audience personas</title>
+		<author>
+			<persName><forename type="first">Yoonseo</forename><surname>Choi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Eun</forename><forename type="middle">Jeong</forename><surname>Kang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Seulgi</forename><surname>Choi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Min</forename></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Kyung</forename><surname>Lee</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Juho</forename><surname>Kim</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/3706598.3714034</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2025 CHI Conference on Human Factors in Computing Systems</title>
+		<meeting>the 2025 CHI Conference on Human Factors in Computing Systems</meeting>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+			<biblScope unit="page" from="1" to="32" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<title level="a" type="main">Persona-l has entered the chat: Leveraging llms and ability-based framework for personas of people with complex needs</title>
+		<author>
+			<persName><forename type="first">Lipeipei</forename><surname>Sun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Tianzi</forename><surname>Qin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anran</forename><surname>Hu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jiale</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Shuojia</forename><surname>Lin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jianyan</forename><surname>Chen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mona</forename><surname>Ali</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mirjana</forename><surname>Prpa</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/3706598.3713445</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2025 CHI Conference on Human Factors in Computing Systems</title>
+		<meeting>the 2025 CHI Conference on Human Factors in Computing Systems</meeting>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+			<biblScope unit="page" from="1" to="31" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">How Can Natural Language Processing and Generative AI Address Grand Challenges of Quantitative User Personas</title>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Soon-Gyo</forename><surname>Jung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hind</forename><surname>Almerekhi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Erik</forename><surname>Cambria</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Jansen</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/978-3-031-48057-7_14</idno>
+	</analytic>
+	<monogr>
+		<title level="m">HCI International 2023 -Late Breaking Papers</title>
+		<editor>
+			<persName><forename type="first">Helmut</forename><surname>Degen</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">Stavroula</forename><surname>Ntoa</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">Abbas</forename><surname>Moallem</surname></persName>
+		</editor>
+		<meeting><address><addrLine>Cham</addrLine></address></meeting>
+		<imprint>
+			<publisher>Springer Nature Switzerland</publisher>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="211" to="231" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Introducing persona ecosystem playground (pep): Generating behaviorally grounded personas from think-aloud data using llms with rag</title>
+		<author>
+			<persName><forename type="first">Danial</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Jansen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Conference on Human Computer Interaction</title>
+		<imprint>
+			<date type="published" when="2025">2026. 2025</date>
+		</imprint>
+	</monogr>
+	<note>In review, Poster</note>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">PersonaFlow: Designing LLM-Simulated Expert Perspectives for Enhanced Research Ideation</title>
+		<author>
+			<persName><forename type="first">Yiren</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Pranav</forename><surname>Sharma</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mehul</forename><surname>Oswal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Haijun</forename><surname>Xia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yun</forename><surname>Huang</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/3715336.3735789</idno>
+		<ptr target="https://doi-org.proxy.uwasa.fi/10.1145/3715336.3735789" />
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2025 ACM Designing Interactive Systems Conference, DIS &apos;25</title>
+		<meeting>the 2025 ACM Designing Interactive Systems Conference, DIS &apos;25<address><addrLine>New York, NY, USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>Association for Computing Machinery</publisher>
+			<date type="published" when="2025">2025</date>
+			<biblScope unit="page" from="506" to="534" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Survey2persona: Rendering survey responses as personas</title>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Jansen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Soon-Gyo</forename><surname>Jung</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/3511047.3536403</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Adjunct Proceedings of the 30th ACM Conference on User Modeling, Adaptation and Personalization</title>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="page" from="67" to="73" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Personagen: A tool for generating personas from user feedback</title>
+		<author>
+			<persName><forename type="first">Xishuo</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lin</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yi</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Xiao</forename><surname>Liu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hailong</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Anqi</forename><surname>Ren</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chetan</forename><surname>Arora</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/RE57278.2023.00048</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2023 IEEE 31st International Requirements Engineering Conference (RE)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="353" to="354" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<monogr>
+		<title level="m" type="main">Writing user personas with large language models: Testing phase 6 of a thematic analysis of semi-structured interviews</title>
+		<author>
+			<persName><forename type="first">Stefano</forename><surname>De</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Paoli</forename></persName>
+		</author>
+		<idno type="arXiv">arXiv:2305.18099</idno>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">User personas, ideation and large language models: A post-hoc study</title>
+		<author>
+			<persName><forename type="first">Stefano</forename><surname>De</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Paoli</forename></persName>
+		</author>
+		<idno type="DOI">10.1016/j.ijhcs.2025.103690</idno>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Human-Computer Studies</title>
+		<imprint>
+			<biblScope unit="volume">208</biblScope>
+			<biblScope unit="page">103690</biblScope>
+			<date type="published" when="2026">2026</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Generating personas using llms and assessing their viability</title>
+		<author>
+			<persName><forename type="first">Andreas</forename><surname>Schuller</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Doris</forename><surname>Janssen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Julian</forename><surname>Blumenröther</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Theresa</forename><forename type="middle">Maria</forename><surname>Probst</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Schmidt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Chandan</forename><surname>Kumar</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/3613905.3650860</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Extended Abstracts of the CHI Conference on Human Factors in Computing Systems</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="1" to="7" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title level="a" type="main">Understanding human-ai workflows for generating personas</title>
+		<author>
+			<persName><forename type="first">Joongi</forename><surname>Shin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><forename type="middle">A</forename><surname>Hedderich</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jakub</forename><surname>Bartłomiej</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Andrés</forename><surname>Rey</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Antti</forename><surname>Lucero</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Oulasvirta</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/3643834.3660729</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2024 ACM Designing Interactive Systems Conference</title>
+		<meeting>the 2024 ACM Designing Interactive Systems Conference</meeting>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="757" to="781" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b38">
+	<analytic>
+		<title level="a" type="main">but the data is already public&quot;: On the ethics of research in facebook</title>
+		<author>
+			<persName><forename type="first">Michael</forename><surname>Zimmer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Ethics and Information Technology</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="313" to="325" />
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b39">
+	<analytic>
+		<title level="a" type="main">Obstacles to user involvement in software product development, with implications for CSCW</title>
+		<author>
+			<persName><forename type="first">Jonathan</forename><surname>Grudin</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/0020-7373(91)90029-7</idno>
+	</analytic>
+	<monogr>
+		<title level="j">International Journal of Man-Machine Studies</title>
+		<title level="j" type="abbrev">International Journal of Man-Machine Studies</title>
+		<idno type="ISSN">0020-7373</idno>
+		<imprint>
+			<biblScope unit="volume">34</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page" from="435" to="452" />
+			<date type="published" when="2006">2006</date>
+			<publisher>Elsevier BV</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b40">
+	<analytic>
+		<title level="a" type="main">Using thematic analysis in psychology</title>
+		<author>
+			<persName><forename type="first">Virginia</forename><surname>Braun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Victoria</forename><surname>Clarke</surname></persName>
+		</author>
+		<idno type="DOI">10.1191/1478088706qp063oa</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Qualitative Research in Psychology</title>
+		<title level="j" type="abbrev">Qualitative Research in Psychology</title>
+		<idno type="ISSN">1478-0887</idno>
+		<idno type="ISSNe">1478-0895</idno>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="77" to="101" />
+			<date type="published" when="2006-01">2006</date>
+			<publisher>Informa UK Limited</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b41">
+	<analytic>
+		<title level="a" type="main">Persona Generation from Aggregated Social Media Data</title>
+		<author>
+			<persName><forename type="first">Soon-Gyo</forename><surname>Jung</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Jisun</forename><surname>An</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Haewoon</forename><surname>Kwak</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Moeed</forename><surname>Ahmad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Lene</forename><surname>Nielsen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><forename type="middle">J</forename><surname>Jansen</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/3027063.3053120</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2017 CHI Conference Extended Abstracts on Human Factors in Computing Systems</title>
+		<meeting>the 2017 CHI Conference Extended Abstracts on Human Factors in Computing Systems</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2017-05-06">2017</date>
+			<biblScope unit="page" from="1748" to="1755" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b42">
+	<analytic>
+		<title level="a" type="main">Latent dirichlet allocation</title>
+		<author>
+			<persName><forename type="first">Andrew</forename><forename type="middle">Y</forename><surname>David M Blei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><forename type="middle">I</forename><surname>Ng</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Jordan</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Machine Learning Research</title>
+		<imprint>
+			<biblScope unit="volume">3</biblScope>
+			<biblScope unit="page" from="993" to="1022" />
+			<date type="published" when="2003">2003</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b43">
+	<monogr>
+		<title level="m" type="main">Creating and evaluating personas using generative ai: A scoping review of 81 articles</title>
+		<author>
+			<persName><forename type="first">Danial</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><forename type="middle">J</forename><surname>Jansen</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2026">2026</date>
+			<publisher>CHI</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b44">
+	<analytic>
+		<title level="a" type="main">Creating Persona Skeletons from Imbalanced Datasets - A Case Study using U.S. Older Adults&apos; Health Data</title>
+		<author>
+			<persName><forename type="first">Haining</forename><surname>Zhu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hongjian</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">John</forename><forename type="middle">M</forename><surname>Carroll</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/3322276.3322285</idno>
+		<ptr target="https://dl.acm.org/doi/10.1145/3322276.3322285" />
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of the 2019 on Designing Interactive Systems Conference</title>
+		<meeting>the 2019 on Designing Interactive Systems Conference<address><addrLine>New York, NY, USA</addrLine></address></meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2019-06-18">June 2019</date>
+			<biblScope unit="page" from="61" to="70" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b45">
+	<monogr>
+		<title level="m" type="main">Using AI for User Representation: An Analysis of 83 Persona Prompts</title>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Danial</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Jansen</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2508.13047</idno>
+		<ptr target="http://arxiv.org/abs/2508.13047" />
+		<imprint>
+			<date type="published" when="2025-08">August 2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b46">
+	<analytic>
+		<title level="a" type="main">How can tensions in sustainability transitions be made visible?: Challenging the actor-centered ecosystem approach through persona-based modeling</title>
+		<author>
+			<persName><forename type="first">Danial</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Farhan</forename><surname>Ahmed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Emillia</forename><surname>Zemskova</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Jansen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Ecosystems and Networks for Sustainable Business</title>
+		<imprint>
+			<publisher>Palgrave Macmillan</publisher>
+			<date type="published" when="2026">2026</date>
+		</imprint>
+	</monogr>
+	<note>In review</note>
+</biblStruct>
+
+<biblStruct xml:id="b47">
+	<analytic>
+		<title level="a" type="main">Proposing A Quantitative Framework for Persona Set Diversity Measurement Toward Inclusive User Representation</title>
+		<author>
+			<persName><forename type="first">Danial</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><surname>Jansen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">User Modeling, Adaptation and Personalization</title>
+		<imprint>
+			<date type="published" when="2025">2026. 2025</date>
+		</imprint>
+	</monogr>
+	<note>One Metric to Rule Them All?</note>
+</biblStruct>
+
+<biblStruct xml:id="b48">
+	<analytic>
+		<title level="a" type="main">The Implementation of Cosine Similarity to Calculate Text Relevance between Two Documents</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Gunawan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">A</forename><surname>Sembiring</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">A</forename><surname>Budiman</surname></persName>
+		</author>
+		<idno type="DOI">10.1088/1742-6596/978/1/012120</idno>
+		<ptr target="https://doi.org/10.1088/1742-6596/978/1/012120" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Physics: Conference Series</title>
+		<title level="j" type="abbrev">J. Phys.: Conf. Ser.</title>
+		<idno type="ISSN">1742-6588</idno>
+		<idno type="ISSNe">1742-6596</idno>
+		<imprint>
+			<biblScope unit="volume">978</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">012120</biblScope>
+			<date type="published" when="2018-03">March 2018</date>
+			<publisher>IOP Publishing</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b49">
+	<monogr>
+		<title level="m" type="main">Fipa acl message structure specification</title>
+		<author>
+			<persName><surname>Fipa</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2002">2002</date>
+			<publisher>Foundation for Intelligent Physical Agents</publisher>
+		</imprint>
+	</monogr>
+	<note type="report_type">Technical report</note>
+</biblStruct>
+
+<biblStruct xml:id="b50">
+	<analytic>
+		<title level="a" type="main">Automated negotiation: prospects, methods and challenges</title>
+		<author>
+			<persName><forename type="first">Peyman</forename><surname>Nicholas R Jennings</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Faratin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Simon</forename><surname>Alessio R Lomuscio</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Michael</forename><forename type="middle">J</forename><surname>Parsons</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Carles</forename><surname>Wooldridge</surname></persName>
+		</author>
+		<author>
+			<persName><surname>Sierra</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Group Decision and Negotiation</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="199" to="215" />
+			<date type="published" when="2001">2001</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b51">
+	<analytic>
+		<title level="a" type="main">Large Language Models in Human–Computer Interaction</title>
+		<author>
+			<persName><forename type="first">Danial</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><forename type="middle">J</forename><surname>Jansen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Ilkka</forename><surname>Kaate</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Waleed</forename><surname>Akhtar</surname></persName>
+		</author>
+		<idno type="DOI">10.1201/9781003492252-10</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Artificial Intelligence and Large Language Models</title>
+		<imprint>
+			<publisher>CRC Press</publisher>
+			<date type="published" when="2025">2025</date>
+			<biblScope unit="page" from="240" to="276" />
+		</imprint>
+	</monogr>
+	<note type="report_type">arXiv preprint</note>
+</biblStruct>
+
+<biblStruct xml:id="b52">
+	<analytic>
+		<title level="a" type="main">Why Are Personas the Way They Are?</title>
+		<author>
+			<persName><forename type="first">Essi</forename><surname>Häyhänen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Joni</forename><surname>Salminen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Bernard</forename><forename type="middle">J</forename><surname>Jansen</surname></persName>
+		</author>
+		<idno type="DOI">10.21153/psj2025vol11noart2002</idno>
+		<ptr target="https://ojs.deakin.edu.au/index.php/ps/article/view/2002" />
+	</analytic>
+	<monogr>
+		<title level="j">Persona Studies</title>
+		<title level="j" type="abbrev">Pers Stud</title>
+		<idno type="ISSN">2205-5258</idno>
+		<imprint>
+			<biblScope unit="volume">11</biblScope>
+			<date type="published" when="2025-03-07">March 2025</date>
+			<publisher>Deakin University</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

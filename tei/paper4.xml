@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Agentic AI-based Coverage Closure for Formal Verification</title>
+				<funder ref="#_FSYAVe4">
+					<orgName type="full">Federal Ministry of Research, Technology and Space</orgName>
+				</funder>
+				<funder ref="#_qzSsnNH">
+					<orgName type="full">Chips Joint Undertaking</orgName>
+				</funder>
+				<funder>
+					<orgName type="full">National Funding Authorities from involved countries</orgName>
+				</funder>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Sivaram</forename><surname>Pothireddypalli</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Infineon Technologies India Private Limited</orgName>
+								<address>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Ashish</forename><surname>Raman</surname></persName>
+							<affiliation key="aff1">
+								<orgName type="department">Dr. B</orgName>
+								<orgName type="institution">R Ambedkar National Institute of Technology Jalandhar</orgName>
+								<address>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Deepak</forename><forename type="middle">Narayan</forename><surname>Gadde</surname></persName>
+							<affiliation key="aff2">
+								<orgName type="institution">Infineon Technologies Dresden AG &amp; Co. KG</orgName>
+								<address>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Aman</forename><surname>Kumar</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Infineon Technologies India Private Limited</orgName>
+								<address>
+									<country key="IN">India</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Agentic AI-based Coverage Closure for Formal Verification</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">77337362D2EF56B6EF4B7EDEF9C106F2</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.0" ident="GROBID" when="2026-03-07T16:45+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Agentic AI</term>
+					<term>LLM</term>
+					<term>Hardware Design</term>
+					<term>Formal Verification</term>
+					<term>Coverage</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Coverage closure is a critical requirement in Integrated Chip (IC) development process and key metric for verification sign-off. However, traditional exhaustive approaches often fail to achieve full coverage within project timelines. This study presents an agentic AI-driven workflow that utilizes Large Language Model (LLM)-enabled Generative AI (GenAI) to automate coverage analysis for formal verification, identify coverage gaps, and generate the required formal properties. The framework accelerates verification efficiency by systematically addressing coverage holes. Benchmarking open-source and internal designs reveals a measurable increase in coverage metrics, with improvements correlated to the complexity of the design. Comparative analysis validates the effectiveness of this approach. These results highlight the potential of agentic AI-based techniques to improve formal verification productivity and support comprehensive coverage closure.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. INTRODUCTION</head><p>Hardware design verification plays a vital role in the Very Large Scale Integration (VLSI) development cycle, ensuring that the implemented design accurately meets its intended specifications. The most widely used methods in industry are simulation-based verification and formal methods. In simulation-based verification, input stimuli are applied to the design, and the resulting outputs are analyzed to verify functional correctness. This method takes significant time to time to verify Register Transfer Level (RTL) designs and also risks omitting corner cases <ref type="bibr" target="#b0">[1]</ref>. Formal methods are an alternative to simulation, in which RTL designs are checked for all possible input cases using mathematical modeling. In a formal environment, there are various tasks, such as planning, property development, proof execution, and formal sign-off. During the property development phase, SystemVerilog assertions are used to verify the design's functional correctness. In addition, it has the potential to simplify the verification process and improve the overall productivity <ref type="bibr" target="#b1">[2]</ref>.</p><p>The entire process of verification even using the traditional exhaustive methods of study takes up to 60 % of the project time <ref type="bibr" target="#b2">[3]</ref>. The primary feature of the effort is the realization of functional coverage because the coverage is often used to measure the progress in verification. It shows that the predetermined verification plan is to be implemented and satisfied.</p><p>Achieving formal coverage closure within a set project timeline is a persistent challenge in hardware design verification. To overcome the above challenge, this study explores the application of LLM-enabled GenAI, which demonstrates contextual reasoning and can translate natural-language descriptions into executable artifacts. This approach includes context-sensitive query solutions and automated code generation <ref type="bibr" target="#b3">[4]</ref>, <ref type="bibr" target="#b4">[5]</ref>. Both formal specification documents and design artifacts, including RTL code, cover properties and assertions that are inherently textual. Therefore, they are well-suited for language-based processing by LLMs.</p><p>Recent advances in agentic AI frameworks have automated key aspects of hardware design and verification. These frameworks can interpret natural language specifications, generate RTL code, and perform design verification. One automatic assertion-generation framework uses LLMs to generate assertions by analyzing natural-language specifications for each architectural signal. This framework incorporates three customized LLMs to extract structural specifications, map signal definitions, and generate assertions. This approach provides substantial advantages for preventing bugs during design and detecting bugs during verification <ref type="bibr" target="#b5">[6]</ref>. Another framework that uses a Multi-Agent System (MAS) to support collaborative code generation, iterative RTL refinement, and dynamic property generation for language-based processing by LLMs. In such an automated environment, specialized agents are capable of generating RTL codes and interfacing with sophisticated Electronic Design Automation (EDA) tools for validation and verification <ref type="bibr" target="#b6">[7]</ref>. Similarly, Saarthi (ScalAble ARTificial and Human Intelligence) is a fully autonomous Artificial Intelligence (AI) formal verification engineer designed to verify RTL designs end-to-end through an agentic workflow <ref type="bibr" target="#b7">[8]</ref>. Saarthi uses agentic reasoning patterns in conjunction with human supervision to achieve robust verification results. Starting with the initial design specification, it sequentially handles verification planning, assertion generation, property proving, Counter Examples (CEXs) analysis, and formal coverage evaluation to support verification sign-off.</p><p>Even with these automated assertion generation and verification execution runs, existing workflows frequently result in residual coverage gaps. This work introduces an agentic AI method, building on Saarthi, to address the coverage gaps.</p><p>The main contributions of this paper are as follows:</p><p>• Automated gap classification: Analyzes coverage report generated by a formal verification tool to partition uncov-ered RTL regions into control flow branches (case, if/else) and statement level gaps. • Targeted property generation: An LLM generates Sys-temVerilog properties (assertions and covers) using RTL and specification context to verify the intended behavior for each uncovered location. • Iterative agentic AI coverage closure: New properties are incorporated, and the coverage report is re-evaluated in a loop until predefined thresholds are met. This method precisely targets uncovered RTL code sections and automatically generates SystemVerilog properties. As a result, coverage gaps are effectively reduced, and the overall verification effort required to achieve the desired coverage within a defined timeframe is minimized.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. BACKGROUND</head><p>This section introduces agentic AI patterns and their ability to handle complex tasks, followed by an overview of coverage principles within the context of formal verification.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Agentic Workflows</head><p>The implementation of Multi-Agent System (MAS), which interacts and communicates among several special software agents to accomplish complicated tasks, is known as agentic AI. These agents usually utilize LLMs, and they have toolawareness to perform the task. Task scheduling, task allocation, and establishment of feedback are parts of workflow to enhance the quality of the response. A logging mechanism guarantees the possibility to generate all the system processes throughout the working process. Further, Human-in-the-Loop (HIL) checkpoints: these are checkpoints that provide monitoring of the model drift, output hallucinations, and workflow decision making where these are deemed essential.</p><p>The major benefits of the agentic patterns are as follows:</p><p>• Dynamic Task Decomposition: Dynamic breakdown of a complex and multi-stage problem to a set of simpler sub problems thus maximizing scalability and execution efficiency <ref type="bibr" target="#b8">[9]</ref>. • Deliberation loops make performance better: Built-in propose-critique-repair cycles in the system inherently limit hallucinations, certify in-between results, and hence provide evaluative feedback of refinements, leading to much better performance <ref type="bibr" target="#b9">[10]</ref>. • Self-Refinement Mechanisms: Structured self-reflection greatly improves problem-solving accuracy across models and benchmarks <ref type="bibr" target="#b10">[11]</ref>. • Multi-Agent workflow: Multi-objectives are broken down to form smaller tasks and the allocation to agents is determined by their expertise which makes them superior in reasoning and also makes the system stable <ref type="bibr" target="#b11">[12]</ref>. • Orchestration: It dictates the way tasks are carried out, it regulates the sharing of data between agents and also dictates dependencies between agents that are interdependent. This kind of coordination can provide a high level of reliability in operations and avoid possible conflicts in workflow definitions <ref type="bibr" target="#b12">[13]</ref>.</p><p>• Invocation of external tools or APIs: Agentic AI enables the use of outside tools and APIs to perform tangible activities and judge their effectiveness as opposed to making use of language-based reasoning only. This feedback process enhances precision and reliability, thereby increasing autonomous operation in the course of complex operational processes <ref type="bibr" target="#b13">[14]</ref>. The characteristics given above increase the independence and capability of an agentic AI to solve difficult tasks. Such systems in formal verification speed up the signoff verification process. The processes involved are to produce the verification plan based on the natural-language specification, produce Sys-temVerilog properties and systematically fills if coverage gaps are present. As the flow goes on, the critic agent checks the property correctness, whereas the executor agent communicates with the formal verification tool to establish the properties and review the CEXs. Therefore, it offers a scalable verification framework of a complex RTL code, correspondence with the design intent, and quicken the process to formal verification.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Formal Coverage</head><p>Formal coverage quantifies the extent to which verification objectives are rigorously exercised within a given set of environmental assumptions. The most common coverage metric is checker coverage, including line, expression, and toggle coverage. Line coverage specifically reports the percentage of synthesizable RTL statements within the Design Under Verification (DUV) that have been mathematically proven reachable and subsequently exercised by a specified property set within the formal verification environment. Consider a minimal example that yields two distinct line coverage targets, corresponding to lines 3 and 5, as detailed in Listing 1. Listing 2 illustrates a formal property that, when (a &amp;&amp; b) holds at a rising clock edge, checks that c captures the prior value of d1 in n cycles. This specific statement is marked as covered once the formal tool successfully identifies a witnessing trace or inductively proves the implication holds universally. If the formal environment is over-constrained (thereby preventing the antecedent (a &amp;&amp; b) from ever being satisfied) or if the proof/search depth parameters are insufficient, the target statement may remain unexercised, and coverage remains incomplete. If a comprehensive test suite fails to exercise line 5, the aggregate line coverage for that specific suite is reported as 50 %. Consequently, line coverage metrics provide a direct indication of whether a specific coverage target has been successfully exercised or not. The systematic incorporation of targeted assertions and cover properties for previously uncovered branches of RTL code can substantially improve coverage in formal verification <ref type="bibr" target="#b14">[15]</ref>.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. METHODOLOGY</head><p>This section outlines the methodology for achieving coverage closure in formal verification using agentic AI. First, an overview of the agentic AI-driven workflow for formal verification is presented. Subsequently, the systematic approach employed to ensure comprehensive coverage is discussed.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Overview of Saarthi Workflow</head><p>Saarthi uses a sophisticated agentic AI-based workflow that makes use of multi-agent collaboration to enable formal verification, as shown in the Fig. <ref type="figure" target="#fig_0">1</ref>. The formal verification lead agent starts the process by parsing the available RTL and the design specification to create a structured Verification Plan (vPlan). Specialized verification agents follow project conventions and coding templates while translating each vPlan item into compile-ready SystemVerilog Assertions (SVAs) under the direction of a task dispatcher. Critic agents give specific feedback to help properties get better while always checking the generated SVAs for syntax errors, completeness, and semantic accuracy. As the flow progress toward high-quality, tool-acceptable SVAs, the iterative loop represented in the planning and generation stages, ensures alignment with the initial requirements. Before proceeding further, Saarthi refers the task to human experts for disambiguation if predetermined iteration thresholds are not met without resolution.</p><p>In order to prove properties, gather CEXs, and facilitate automated repair cycles, the code executor agent interfaces with industry-standard formal verification tools such as Cadence Jasper Gold <ref type="bibr" target="#b15">[16]</ref> during execution. Agents for verification and criticism examine CEX traces to identify underlying issues, revise SVAs or RTL constraints as necessary, and submit proofs again until convergence. The following section presents a detailed explanation of how coverage agents incorporate additional properties when coverage gaps remain, ensuring alignment with vPlan targets.</p><p>The suggested framework, as shown in the Fig. <ref type="figure">2</ref>, uses a multi-agent group chat where specialized roles, such as verification lead, formal verification engineer, and SystemVerilog expert, work together on verification tasks defined by the user through a shared event-driven mechanism. A HIL agent continuously supervises the workflow to ensure that automated decisions are consistent with expert domain knowledge. In an event-driven architecture, a Group Chat Manager uses AutoGen's Core API to make sure that only one agent can talk at a time and that everyone follows the rules of interaction <ref type="bibr" target="#b16">[17]</ref>. To get around some of the common problems with LLMs, complicated goals are broken down into smaller tasks that are given to different agents. At the same time, critic agents check the quality and accuracy of the SVAs that are made over and </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Agentic AI based coverage closure</head><p>The methodology begins with the RTL specification and an initial SVA file, which are processed by a formal verification tool to generate a coverage report after proof process. If no coverage holes, such as uncovered or unreachable sections of the RTL codebase, are discovered, the design proceeds directly to formal sign-off, as illustrated in Fig. <ref type="figure" target="#fig_2">3</ref>. When gaps are present, the procedure transfers control to an agentic AI stage that creates LLM-generated properties aimed at the uncovered areas in order to make ready for iterative closure in the next stages.</p><p>The agentic AI methodology addresses coverage gaps in formal verification by ingesting the coverage report generated by a formal verification tool and automatically producing a modified SVA file. This process is orchestrated by two cooperating agents: (i) a Coverage Hole Analyzer that characterizes the RTL context of uncovered code and (ii) an SVA Property Generator that generates targeted, LLM-generated properties to address the identified gaps. The updated SVA properties are incorporated into the SVA file and then reintroduced to the formal verification tool, thereby closing the feedback loop. The  iterative process continues until all required coverage goals are fully met. Coverage analysis data is obtained from the formal verification tool. Following the required preprocessing and normalization steps, exact RTL locations of uncovered regions are extracted for each module, including any preconditions identified by the tool. These locations are then classified into two groups: (i) isolated locations, representing standalone sections with minimal structural context, and (ii) branch and statement locations, which are related to control flow, such as case, if/else, and always blocks. This classification ensures that attributes are properly targeted for coverage closure by influencing downstream agents' reasoning regarding reachability and timing considerations. The preprocessed locations are input Coverage Analyzer, and its output is subsequently provided to the SVA Property Generator, which generates the required SVA properties, as shown in Fig. <ref type="figure" target="#fig_3">4</ref>.  The Coverage Hole Analyzer agent is a core component of our methodology that systematically identifies areas within the design that show insufficient coverage. The structural and semantic context surrounding every coverage hole is reconstructed through static code analysis by interpreting preprocessed locations and their corresponding preconditions with relevant RTL files. It extracts the name of the module being analyzed, checks the timing behavior, the input and output signals, and maintains records of the preconditions and reset logic for each area that is found. It also picks the type of enclosing block, like always_ff, always_comb, if/else, or case, to show how the design operates and the way it fits into the design hierarchy. This detailed context is encoded into a short JSON format, which eliminates the need for extra RTL parsing and lets downstream agents easily figure <ref type="figure">out</ref>  The SVA Property Generator processes the JSON output data and extracts macro definitions from the main SVA file to generate SVAs. It applies templates specific to each construct and timing class to produce SystemVerilog properties that target unexercised branches and assertions that formalize intended behavior under the specified preconditions. Clocking and reset semantics are determined by the timing class, and signals are mapped to the appropriate interfaces. During property generation, the agent reuses an existing property name if it is present in the SVA file; otherwise, it generates a random property name to minimize duplication. The agent then merges these properties with the existing properties, maintains naming conventions, and inserts traceability comments linking each property to its original coverage location. The resulting SVA file is immediately prepared for re-execution within the formal verification tool environment. A sample definition and goal utilized by the SVA Property Generator agent are detailed in Listing 5, while the extracted code from the JSON response of the agent is presented in Listing 6.</p><p>Listing 5: Concise definition and targets for SVA Property Genertor The workflow operates iteratively; after each update to the SVA file, the formal verification tool is re-executed to generate a new coverage report. Autonomous agents update or append the formal properties set in response to any coverage gaps until the target coverage metrics are met. When the design intent cannot be verified using purely static analysis, an expert agent gets involved at each iteration to validate property intent, avoid over-constraint of the specification, and resolve complex edge cases. This iterative process thus facilitates the faster closure of coverage, traceably reducing the manual verification effort through systematic consistency throughout the process.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. BENCHMARKING</head><p>To evaluate the effectiveness and capabilities of the proposed methodology for coverage closure in formal verification, we benchmark the updated Saarthi framework, integrated with our coverage agents, on a diverse set of RTL designs. The benchmark suite includes both open-source and in-house industrygrade design spanning various complexity levels. Table I highlights performance of the Saarthi framework with and without proposed coverage agents. To compare performance across various LLMs, we employ two Key Performance Indicators (KPIs). The first is the proven percentage, defined as the percentage of properties successfully proven among all properties generated by the LLM; the second is coverage, quantified as the formal coverage achieved following an end-to-end formal verification flow. Across various models, the Saarthi workflow with our coverage agents achieved the highest performance with OpenAI's GPT-5 <ref type="bibr" target="#b18">[19]</ref>, moderate performance with OpenAI's GPT-4.1 <ref type="bibr" target="#b18">[19]</ref>, and the lowest performance with Meta's Llama3.3 <ref type="bibr" target="#b19">[20]</ref>. The incorporation of our coverage agents consistently increases the coverage metrics by approximately 10 % to 20 %, with the largest gains observed in the more complex designs. Specifically, in the case of the ECC design, coverage surpassed 80 % when the coverage agents were employed. Also, considerable enhancement in coverage were recorded for the AXI4LITE, CIC Decimator, and Memory Scheduler designs. The most significant change was observed in the Automotive IP, where the baseline coverage without agents was low but increased significantly after the incorporating of coverage agents. Although GPT-5 exhibited superior performance due to its advanced reasoning capabilities, but exhibited higher latency in comparision.</p><p>In some cases, especially within a subset of designs, the proven rate for generated properties decreased after the coverage agents' workflow, even though overall coverage increased. This divergence arises because introducing new properties can enhance coverage, but may also result in formal properties that are more challenging to verify. Furthermore, the effectiveness of the generated properties is closely tied to the extraction of accurate RTL code by the Coverage Hole Analyzer agent. Imperfections at this stage, along with the occasional generation of incorrect or duplicate properties by LLMs, can negatively impact the proven rate. The above problems are methodically handled through an HIL review stage, guaranteeing that only valid and verifiable properties are retained in the final verification environment.</p><p>Importantly, these results were obtained without any HIL in the flow. Based on these benchmarking results, integrating HIL in the Saarthi flow, specifically after the coverage agents have performed their tasks, is likely to further boost coverage metrics, as new properties have been generated for previously uncovered regions. This enhancement may speed up the formal verification sign-off stage in the IC design process and lower the overall time required for completion.  This paper presented an automated workflow that leverages agentic AI enabled LLM to accelerate coverage in the formal verification. The proposed approach strategically targets uncovered RTL regions, enabling the automatic generation of formal properties. Experimental results from both open-source and internal RTL designs confirm that the framework consistently enhances formal coverage. The target of the approach is formal property generation and the passing rate of generated properties, each further impacting the coverage rate. Even though the proven rate is mostly dependent on the quality of LLMs' outputs, the findings show that the LLM-guided verification is a promising route to automated coverage closure in formal verification. This approach substantially reduces manual effort in the formal verification process and provides a strong methodological basis for future advancements in AI-assisted coverage closure.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Listing 1 :</head><label>1</label><figDesc>Consider the following RTL block 1 always @(posedge clk)</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 1 .Fig. 2 .</head><label>12</label><figDesc>Fig.1. Agentic AI methodology for formal verification<ref type="bibr" target="#b7">[8]</ref> </figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Fig. 3 .</head><label>3</label><figDesc>Fig. 3. Basic flow diagram of coverage pipeline</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 4 .</head><label>4</label><figDesc>Fig. 4. Overview of the coverage agent workflow</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4"><head></head><label></label><figDesc>(a) Design: ECC (b) Design: CIC Decimator (c) Design: AXI4LITE (d) Design: Automotive IP (e) Design: Memory Scheduler Coverage metrics without Coverage Agents Coverage metrics with Coverage Agents</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5"><head>Fig. 5 .</head><label>5</label><figDesc>Fig. 5. Coverage metrics comparison across various designs using different models</figDesc><graphic coords="6,45.18,181.81,165.60,107.64" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2"><head></head><label></label><figDesc>properties. A sample definition and goal utilized by the Coverage Hole Analyzer agent are detailed in Listing 3, while the corresponding output generated is presented in Listing 4.</figDesc><table><row><cell></cell><cell>Listing 3: Concise definition and targets for Coverage Hole Analyzer</cell></row><row><cell>1</cell><cell>coverage_hole_analyzer:</cell></row><row><cell>2</cell><cell>system_prompt: &gt; You are the RTL coverage hole analyzer</cell></row><row><cell></cell><cell>with mandatory code-extarction capabilities.</cell></row><row><cell>3</cell><cell></cell></row><row><cell>4</cell><cell>goal: &gt; Transform coordinate-based location data into</cell></row><row><cell></cell><cell>detailed RTL behaviour analysis. Follow the steps</cell></row><row><cell></cell><cell>below</cell></row><row><cell>5</cell><cell></cell></row><row><cell>6</cell><cell>STEP 1: RTL CODE EXTARCTION</cell></row><row><cell>7</cell><cell>-For every location,extract the exact RTL slice</cell></row><row><cell>8</cell><cell></cell></row><row><cell>9</cell><cell>STEP 2: SINGLE BEHAVIOUR CLASSIFICATION</cell></row><row><cell>10</cell><cell>-One location -&gt; one behaviour -&gt; one future property.</cell></row><row><cell>11</cell><cell></cell></row><row><cell>12</cell><cell>STEP 3: LOGIC PATTERN and CONSOLIDATION ANALYSIS</cell></row><row><cell>13</cell><cell>-For each location,derive a logic_signature:</cell></row><row><cell>14</cell><cell>{opeartion_pattern, signal_realtion,</cell></row><row><cell>15</cell><cell>timing_pattern}</cell></row><row><cell cols="2">Listing 4: Response generated from Coverage Hole Analyzer in JSON format</cell></row><row><cell>1</cell><cell>{</cell></row><row><cell>2</cell><cell>"module": "alu",</cell></row><row><cell>3</cell><cell>"input_type": "BRANCH_STRUCTURE|ISOLATED_STRUCTURE",</cell></row><row><cell>4</cell><cell>"locations": [</cell></row><row><cell>5</cell><cell>{</cell></row><row><cell>6</cell><cell>"start": [60, 34],</cell></row><row><cell>7</cell><cell>"end": [60, 39]</cell></row><row><cell>8</cell><cell>}</cell></row><row><cell>9</cell><cell>],</cell></row><row><cell>10</cell><cell>"type": "BRANCH",</cell></row><row><cell>11</cell><cell>"code": "c &lt;= a + b",</cell></row><row><cell>12</cell><cell>"behavior": "Mode-based state machine branch selection,</cell></row><row><cell>13</cell><cell>"statement_type": "case_statement",</cell></row><row><cell>14</cell><cell>"signals": {</cell></row><row><cell>15</cell><cell>"in": ["a", "b"],</cell></row><row><cell>16</cell><cell>"out": ["c"]</cell></row><row><cell>17</cell><cell>},</cell></row><row><cell>18</cell><cell>"timing": "always_ff"</cell></row><row><cell>19</cell><cell>}</cell></row></table></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4"><head>TABLE I</head><label>I</label><figDesc>Saarthi performance across designs with coverage agents</figDesc><table><row><cell>Design</cell><cell>Metric</cell><cell cols="3">Without coverage agents</cell><cell cols="3">With coverage agents</cell></row><row><cell></cell><cell></cell><cell cols="6">GPT-4.1 GPT-5 Llama3.3 GPT-4.1 GPT-5 Llama3.3</cell></row><row><cell></cell><cell># Properties</cell><cell>40</cell><cell>23</cell><cell>15</cell><cell>110</cell><cell>35</cell><cell>41</cell></row><row><cell>ECC</cell><cell>Proven (%)</cell><cell>90</cell><cell>95.65</cell><cell>73.33</cell><cell>83.36</cell><cell>80</cell><cell>60.97</cell></row><row><cell></cell><cell cols="2">Coverage (%) 61.72</cell><cell>70.30</cell><cell>70.71</cell><cell>89.30</cell><cell>92.11</cell><cell>89.60</cell></row><row><cell></cell><cell># Properties</cell><cell>13</cell><cell>28</cell><cell>10</cell><cell>28</cell><cell>33</cell><cell>17</cell></row><row><cell>CIC Decimator [18]</cell><cell>Proven (%)</cell><cell>61.5</cell><cell>53.57</cell><cell>50</cell><cell>82.14</cell><cell>78.78</cell><cell>52.94</cell></row><row><cell></cell><cell cols="2">Coverage (%) 63.98</cell><cell>71.54</cell><cell>52.38</cell><cell>74.32</cell><cell>81.04</cell><cell>66.39</cell></row><row><cell></cell><cell># Properties</cell><cell>35</cell><cell>38</cell><cell>20</cell><cell>101</cell><cell>80</cell><cell>77</cell></row><row><cell>AXI4LITE [18]</cell><cell>Proven (%)</cell><cell>57.14</cell><cell>55.26</cell><cell>20</cell><cell>64.35</cell><cell>42.45</cell><cell>51.94</cell></row><row><cell></cell><cell cols="2">Coverage (%) 27.87</cell><cell>45.85</cell><cell>24.82</cell><cell>36.63</cell><cell>53.59</cell><cell>51.29</cell></row><row><cell></cell><cell># Properties</cell><cell>27</cell><cell>35</cell><cell>2</cell><cell>53</cell><cell>89</cell><cell>19</cell></row><row><cell>Automotive IP</cell><cell>Proven (%)</cell><cell>74.07</cell><cell>62.22</cell><cell>50</cell><cell>77.35</cell><cell>51.68</cell><cell>26.31</cell></row><row><cell></cell><cell cols="2">Coverage (%) 80.48</cell><cell>72.67</cell><cell>5.81</cell><cell>83.04</cell><cell>79.05</cell><cell>38.87</cell></row><row><cell></cell><cell># Properties</cell><cell>28</cell><cell>22</cell><cell>30</cell><cell>53</cell><cell>103</cell><cell>47</cell></row><row><cell>Memory Scheduler [18]</cell><cell>Proven (%)</cell><cell>53.57</cell><cell>45.45</cell><cell>26.66</cell><cell>73.58</cell><cell>90.29</cell><cell>29.78</cell></row><row><cell></cell><cell cols="2">Coverage (%) 50.88</cell><cell>46.39</cell><cell>46.45</cell><cell>68.82</cell><cell>67.91</cell><cell>49.41</cell></row></table></figure>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div><head>ACKNOWLEDGEMENT</head><p>Under grant <rs type="grantNumber">101194371</rs>, Rigoletto is supported by the <rs type="funder">Chips Joint Undertaking</rs> and its members, including the top-up funding by the <rs type="funder">National Funding Authorities from involved countries</rs>.</p><p>Rigoletto is also funded by the <rs type="funder">Federal Ministry of Research, Technology and Space</rs> under the funding code <rs type="grantNumber">16MEE0548S</rs>. The responsibility for the content of this publication lies with the author.</p></div>
+			</div>
+			<listOrg type="funding">
+				<org type="funding" xml:id="_qzSsnNH">
+					<idno type="grant-number">101194371</idno>
+				</org>
+				<org type="funding" xml:id="_FSYAVe4">
+					<idno type="grant-number">16MEE0548S</idno>
+				</org>
+			</listOrg>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">Formal Methods for Safe and Secure Computer Systems</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Leventi-Peetz1</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Tech. Rep</title>
+		<imprint>
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Formal verification in hardware design</title>
+		<author>
+			<persName><forename type="first">Christoph</forename><surname>Kern</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mark</forename><forename type="middle">R</forename><surname>Greenstreet</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/307988.307989</idno>
+	</analytic>
+	<monogr>
+		<title level="j">ACM Transactions on Design Automation of Electronic Systems</title>
+		<title level="j" type="abbrev">ACM Trans. Des. Autom. Electron. Syst.</title>
+		<idno type="ISSN">1084-4309</idno>
+		<idno type="ISSNe">1557-7309</idno>
+		<imprint>
+			<biblScope unit="volume">4</biblScope>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page" from="123" to="193" />
+			<date type="published" when="1999-04">1999</date>
+			<publisher>Association for Computing Machinery (ACM)</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">FullChip Verification of UDSM Designs</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Foster</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/9780470546413.ch27</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Signal Integrity Effects in Custom IC and ASIC Designs</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+		<respStmt>
+			<orgName>Siemens Blog</orgName>
+		</respStmt>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Hardware Design and Verification with Large Language Models: A Scoping Review, Challenges, and Open Issues</title>
+		<author>
+			<persName><forename type="first">Meisam</forename><surname>Abdollahi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Seyedeh</forename><forename type="middle">Faegheh</forename><surname>Yeganli</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Mohammad</forename><forename type="middle">(amir)</forename><surname>Baharloo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Amirali</forename><surname>Baniasadi</surname></persName>
+		</author>
+		<idno type="DOI">10.3390/electronics14010120</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Electronics</title>
+		<title level="j" type="abbrev">Electronics</title>
+		<idno type="ISSNe">2079-9292</idno>
+		<imprint>
+			<biblScope unit="volume">14</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page">120</biblScope>
+			<date type="published" when="2025">2025</date>
+			<publisher>MDPI AG</publisher>
+		</imprint>
+		<respStmt>
+			<orgName>Electronics</orgName>
+		</respStmt>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<monogr>
+		<title level="m" type="main">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</title>
+		<author>
+			<persName><forename type="first">Deepseek-Ai</forename></persName>
+		</author>
+		<idno>arXiv</idno>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">AssertLLM: Generating Hardware Verification Assertions from Design Specifications via Multi-LLMs</title>
+		<author>
+			<persName><forename type="first">W</forename><surname>Fang</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">LAD</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Hey AI, Generate Me a Hardware Code! Agentic AI-based Hardware Design &amp; Verification</title>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">N</forename><surname>Gadde</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">SBCCI</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<title level="m" type="main">Saarthi: The First AI Formal Verification Engineer</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Kumar</surname></persName>
+		</author>
+		<idno>arXiv</idno>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<monogr>
+		<title level="m" type="main">Advancing Agentic Systems: Dynamic Task Decomposition, Tool Integration and Evaluation using Novel Metrics and Dataset</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Jeyakumar</surname></persName>
+		</author>
+		<idno>arXiv</idno>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<monogr>
+		<title level="m" type="main">A Survey on LLM-based Multi-Agent System: Recent Advances and New Frontiers in Application</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Chen</surname></persName>
+		</author>
+		<idno>arXiv</idno>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Self-Reflection in Large Language Model Agents: Effects on Problem-Solving Performance</title>
+		<author>
+			<persName><forename type="first">M</forename><surname>Renze</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">FLLM</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<title level="m" type="main">Know the Ropes: A Heuristic Strategy for LLM-based Multi-Agent System Design</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Li</surname></persName>
+		</author>
+		<idno>arXiv</idno>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">A Survey on Agent Workflow – Status and Future</title>
+		<author>
+			<persName><forename type="first">Chaojia</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zihan</forename><surname>Cheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hanwen</forename><surname>Cui</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yishuo</forename><surname>Gao</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Zexu</forename><surname>Luo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yijin</forename><surname>Wang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Hangbin</forename><surname>Zheng</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Yong</forename><surname>Zhao</surname></persName>
+		</author>
+		<idno type="DOI">10.1109/icaibd64986.2025.11082076</idno>
+	</analytic>
+	<monogr>
+		<title level="m">2025 8th International Conference on Artificial Intelligence and Big Data (ICAIBD)</title>
+		<imprint>
+			<publisher>IEEE</publisher>
+			<date type="published" when="2025-05-23">2025</date>
+			<biblScope unit="page" from="770" to="781" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<monogr>
+		<author>
+			<persName><forename type="first">W</forename><surname>Zhang</surname></persName>
+		</author>
+		<idno>arXiv</idno>
+		<title level="m">AgentOrchestra: Orchestrating Hierarchical Multi-Agent Intelligence with the Tool-Environment-Agent(TEA) Protocol</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<monogr>
+		<title level="m" type="main">Formal Verification: An Essential Toolkit for Modern VLSI Design</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Seligman</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2015">2015</date>
+			<publisher>Morgan Kaufmann</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title level="m">Jasper Formal Verification Platform</title>
+		<imprint>
+			<publisher>Cadence Design Systems, Inc</publisher>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<monogr>
+		<title level="m" type="main">AutoGen: Framework for Multi-Agent Systems</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+		<respStmt>
+			<orgName>Microsoft Research</orgName>
+		</respStmt>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<monogr>
+		<title level="m" type="main">Comprehensive Verilog Design Problems: A Next-Generation Benchmark Dataset for Evaluating Large Language Models and Agents on RTL Design and Verification</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Pinckney</surname></persName>
+		</author>
+		<idno>arXiv</idno>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<monogr>
+		<author>
+			<persName><surname>Openai</surname></persName>
+		</author>
+		<title level="m">GPT-4.1 and GPT-5</title>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<monogr>
+		<title level="m" type="main">LLaMA 3.3 Model Card and Prompt Formats</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">I</forename><surname>Meta</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

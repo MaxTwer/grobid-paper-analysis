@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">REGAL: A Registry-Driven Architecture for Deterministic Grounding of Agentic AI in Enterprise Telemetry</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Yuvraj</forename><surname>Agrawal</surname></persName>
+							<affiliation key="aff0">
+								<orgName type="institution">Adobe Inc</orgName>
+							</affiliation>
+						</author>
+						<title level="a" type="main">REGAL: A Registry-Driven Architecture for Deterministic Grounding of Agentic AI in Enterprise Telemetry</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">364D7151C0C48D96BCB541C94B036ECB</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.0" ident="GROBID" when="2026-03-07T16:43+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>REGAL</term>
+					<term>Model Context Protocol (MCP)</term>
+					<term>Agentic AI</term>
+					<term>Deterministic Grounding</term>
+					<term>Medallion Architecture</term>
+					<term>ELT</term>
+					<term>Observability</term>
+					<term>Engineering Analytics</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>Enterprise engineering organizations produce highvolume, heterogeneous telemetry from version control systems, CI/CD pipelines, issue trackers, and observability platforms. Large Language Models (LLMs) enable new forms of agentic automation, but grounding such agents on private telemetry raises three practical challenges: limited model context, locally defined semantic concepts, and evolving metric interfaces.</p><p>We present REGAL, a registry-driven architecture for deterministic grounding of agentic AI systems in enterprise telemetry. REGAL adopts an explicitly architectural approach: deterministic telemetry computation is treated as a first-class primitive, and LLMs operate over a bounded, version-controlled action space rather than raw event streams.</p><p>The architecture combines (1) a Medallion ELT pipeline that produces replayable, semantically compressed Gold artifacts, and (2) a registry-driven compilation layer that synthesizes Model Context Protocol (MCP) tools from declarative metric definitions. The registry functions as an "interface-as-code" layer, ensuring alignment between tool specification and execution, mitigating tool drift, and embedding governance policies directly at the semantic boundary.</p><p>A prototype implementation and case study validate the feasibility of deterministic grounding and illustrate its implications for latency, token efficiency, and operational governance. This work systematizes an architectural pattern for enterprise LLM grounding; it does not propose new learning algorithms, but rather elevates deterministic computation and semantic compilation to first-class design primitives for agentic systems.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>I. INTRODUCTION</head><p>Modern software engineering organizations generate distributed, high-volume telemetry across source control, CI/CD, issue trackers, and observability platforms. This telemetry is crucial for operational decision-making, but it is fragmented, schema-volatile, and often access-controlled. Naïvely exposing raw logs to probabilistic reasoners (e.g., LLMs via Retrieval-Augmented Generation) leads to three practical failures: <ref type="bibr" target="#b0">(1)</ref> context overload and prohibitive token costs, (2) semantic ambiguity where organizational meanings are not globally defined, and (3) interface drift when hand-coded tools diverge from evolving telemetry semantics.</p><p>LLM-based agents promise to automate cross-system synthesis, but their usefulness depends on how we expose telemetry to them. In practice, we must decide whether the model should process raw events or interact with a semantically stable API surface. This paper advocates the latter: deterministic data computation should be performed explicitly and versioned; LLMs should be consumers of those deterministic artifacts and selectors of a bounded set of semantic tools. We formalize this approach in REGAL (Registry-Driven Architecture for Grounded Agentic LLMs), the reference architecture presented in this paper. REGAL operationalizes deterministic grounding by compiling declarative metric definitions into a bounded semantic interface that LLM agents consume.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Problem summary: limitations of probabilistic grounding</head><p>Three constraints make grounding LLMs on enterprise telemetry challenging:</p><p>• Context limits. Enterprise telemetry volumes far exceed contemporary model context sizes. Sending raw events to the model is economically and operationally infeasible for many tasks. • Local semantics. Organizational concepts ("P1", "release-candidate", "regression") are defined internally; probabilistic retrieval without deterministic binding leads to inconsistent interpretation and hallucination. • Interface evolution. Hand-coded tools and ad-hoc APIs diverge from data semantics as schemas and metric definitions evolve, causing tool drift and governance risk.</p><p>These constraints suggest that grounding should be an architectural decision: compute, compress, and version telemetry first; expose a controlled action space second.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Key idea: registry-driven semantic compilation</head><p>We introduce a design in which a declarative metrics registry is the single source of truth. The registry captures metric semantics, retrieval logic, and governance metadata; a deterministic compilation step generates the concrete MCPexposed tool surface from this registry. In effect, the registry implements an "interface-as-code" pattern for agentic systems: rather than hand-writing tools, operators declare metrics and compilation produces executable, audited, and accesscontrolled tools.</p><p>This pattern directly addresses tool drift: tool specifications and their implementations are derived from the same artifact, ensuring alignment over time. It also constrains the agent's action space, which materially reduces the hallucination surface and simplifies policy enforcement.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>arXiv:2603.03018v1 [cs.AI] 3 Mar 2026</head><p>C. Scope and contributions REGAL is presented as a systematization and reference architecture rather than an algorithmic contribution. The core contributions are:</p><p>• Registry-driven MCP compilation: An interface-ascode pattern that synthesizes tool schemas, retrieval logic, and governance controls from declarative metric definitions. Novelty statement To the best of our knowledge, REGAL is the first systematization that (a) formalizes registry-driven semantic compilation as an explicit architectural grounding constraint for enterprise LLM agents, and (b) operationalizes that constraint end-to-end-covering deterministic ingestion, versioned Medallion transformations, and automated compilation of declarative metric definitions into MCP-exposed, access-controlled tools. While elements of the pipeline (e.g., Medallion ELT, change streams, MCP tooling) exist independently in prior work, REGAL's novel combination is the explicit architectural commitment to treat the registry as the single source of truth and the compilation step as the enforcement mechanism that bounds the agent's action space.</p><p>Figure <ref type="figure" target="#fig_0">1</ref> provides a visual summary of the architecture: deterministic refinement produces versioned Gold artifacts that are the sole inputs to LLM-based agents. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Paper roadmap</head><p>The remainder of the paper proceeds as follows. Section II presents the reference architecture and the deterministic/probabilistic separation. Section III details the registry-driven semantic compilation pattern (the paper's primary contribution). Section IV describes the deterministic ingestion and Medallion pipeline that produces Gold artifacts. Section V discusses storage and serving considerations; Section VI describes the push/pull interaction model. Section VII positions this approach relative to RAG, Text-to-SQL and vendor platforms. Section VIII presents the prototype implementation and case study. We conclude with open research directions in Section IX.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>II. THE REFERENCE ARCHITECTURE</head><p>Designing reliable agentic AI for engineering observability requires more than attaching an LLM to existing APIs. Enterprise telemetry is heterogeneous, temporal, and governed by access controls; it is also subject to rate limits, schema drift, and transient failures. Exposing raw telemetry to probabilistic reasoners therefore risks costly token usage, ambiguous semantics, and brittle tooling.</p><p>The REGAL architecture centers a simple design principle: perform deterministic computation and semantic compilation before exposing any telemetry to probabilistic agents. In practice, this means (a) produce replayable, version-controlled Gold artifacts via a deterministic ELT pipeline, and (b) synthesize a bounded, audited action space (tools) from a declarative metrics registry. The registry-to-tool compilation pattern is the primary architectural contribution of this work: it is the mechanism by which the system constrains reasoning to a safe, auditable interface.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Architectural overview</head><p>The system separates responsibilities into four layers with a unidirectional data flow:</p><p>1) Source layer. External systems (version control, CI/CD, issue trackers, observability) that emit events or state. 2) Ingestion &amp; orchestration (write path). Deterministic extraction, validation, reconciliation, and upsert semantics that guarantee replayability. 3) Medallion storage (context store). A layered transformation that converts raw telemetry (Bronze) to harmonized records (Silver) and to compact, semantically rich Gold artifacts intended for AI consumption. 4) Semantic layer (read path). A registry-driven compilation component that generates concrete MCP-exposed tools, access controls, and caching policies; agents reason only over these synthesized tools and their deterministic outputs.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Deterministic-probabilistic non-interference (concise property)</head><p>To make the separation explicit, we state a non-interference property in plain terms:</p><p>Deterministic computation (ingestion, transformation, compilation) produces version-controlled artifacts and tool definitions. Probabilistic reasoning (LLM inference) may consume these artifacts, but probabilistic inference must not alter or redefine telemetry computation. In other words, interpretation is allowed to depend on computed artifacts, but computation must not depend on interpretation.</p><p>Formal property: For clarity we adopt symbols:</p><p>D -deterministic transformations (ingestion, harmonization, compilation), P -probabilistic inference (LLM/agent reasoning), G -Gold artifacts, i.e., version-controlled outputs of D.</p><p>The intended information flow is</p><formula xml:id="formula_0">D(input) -→ G and P(G) -→ Output.</formula><p>We express non-interference informally as</p><formula xml:id="formula_1">∂D ∂P = 0,</formula><p>meaning that changes in P (model choice, prompt design, or reasoning strategy) must not alter D or G. Operationally, D must be replayable, versioned, and invariant under substitution of P.</p><p>This non-interference property is enforced operationally by version-controlled transformations, deterministic upsert semantics, and compilation-from-registry (so tool definition and implementation originate from a single artifact).</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Hybrid push-pull interaction model</head><p>Practical agentic systems must support both retrospective analysis and near-real-time awareness:</p><p>• Pull (historical reasoning). On user request, agents invoke registry-generated tools that return deterministic Gold artifacts covering bounded time windows. Because the artifacts are pre-aggregated, agents avoid tokenexpensive reconstruction of raw logs. • Push (event-driven awareness). Change streams or event monitors propagate state transitions in Gold artifacts to alerting and agent triggers. This decouples detection latency from user invocation frequency and supports proactive workflows. Both paths operate over the same Gold artifacts and compiled tool surface, eliminating semantic divergence between reactive and proactive workflows.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Design principles and invariants (operational form)</head><p>Rather than presenting ornamental equations, we express the architecture's key invariants as operational guarantees:</p><p>a) Model-agnostic data invariant.: Transformations that produce Gold artifacts are independent of downstream inference models. Swapping the LLM or agent framework does not require changing ingestion, harmonization, or metric computation.</p><p>b) Idempotent ingestion and replayability.: Ingestion and transformation are implemented so that repeated execution over the same input yields identical Gold artifacts. This is achieved via deterministic keys, upsert semantics, and replayable DAGs.</p><p>c) Context compression as semantic engineering.: The Medallion stages progressively increase semantic density and decrease raw volume so that the Gold working set is compact, semantically explicit, and suitable for bounded LLM consumption.</p><p>d) Semantic consistency via single-source registry.: Metric semantics, retrieval logic, and governance metadata are declared in a single registry artifact. Tool schemas, implementations, access controls, and caching policies are compiled from this artifact, ensuring consistent definitions across runtime components.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Operational consequences</head><p>Framing grounding as an architectural constraint produces several practical benefits:</p><p>• Auditability: All metric definitions and transformations are version-controlled and replayable. • Governance: Access policies and TTLs are enforced at the compiled tool boundary, simplifying compliance.</p><p>• Reduced hallucination surface: The agent's action space is bounded to a finite set of compiled tools, reducing opportunities for unconstrained model synthesis.</p><p>• Predictable economics: Upstream aggregation bounds token growth by exposing compact artifacts instead of raw event streams. The next sections make the registry-driven compilation pattern concrete, describe the deterministic ingestion pipeline that produces Gold artifacts, and discuss design trade-offs observed in our prototype.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>III. THE SEMANTIC LAYER: REGISTRY-DRIVEN SEMANTIC COMPILATION</head><p>A consistent storage layer is necessary but insufficient for reliable agentic reasoning. Large Language Models (LLMs) do not natively understand organizational schema semantics, nor do they enforce alignment between a tool's declared purpose and its underlying implementation. Bridging structured telemetry and probabilistic reasoning therefore requires an explicit semantic interface that constrains how telemetry is exposed.</p><p>The core contribution of this work is a registry-driven semantic compilation layer. Instead of manually defining tool schemas and API handlers independently-a process prone to divergence over time-we define metrics declaratively in a centralized registry and compile the concrete Model Context Protocol (MCP) tool surface from that registry. The registry acts as a single source of truth for metric meaning, retrieval logic, and governance metadata.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Tool Drift as a Systems Failure Mode</head><p>In many LLM-integrated systems, the tool definition visible to the model and the backend implementation evolve independently. Over time, the model's understanding of what a tool does may diverge from the actual computation executed by the system. We refer to this misalignment as tool drift.</p><p>In enterprise settings, tool drift is not merely an inconvenience. It creates governance risk: metric definitions may change without corresponding updates to prompts or tool documentation, leading to incorrect interpretations that are difficult to audit.</p><p>The registry-driven approach addresses this by construction: tool schemas, descriptions, and retrieval logic are generated from a single declarative artifact. There is no manually maintained duplication between interface and implementation.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. The Registry as an Interface Definition Layer</head><p>The metrics registry captures, for each metric:</p><p>• A stable identifier and human-readable description,</p><p>• The deterministic retrieval function over Gold artifacts,</p><p>• Platform or environment scoping, • Governance metadata (e.g., caching policy, access control category). At initialization time, a compilation step generates:</p><p>• Concrete MCP tool schemas,</p><p>• Tool descriptions presented to the LLM, • Access control bindings, • Caching behavior derived from metric volatility. This pattern can be understood as "interface-as-code": instead of hand-writing tool endpoints, engineers declare metric semantics and allow compilation to produce a consistent runtime interface. Implementation independence The registry-to-tool compilation pattern is language-and framework-agnostic. While prototype examples and snippets in this paper use Python for clarity, the registry can target any interface description (Ope-nAPI/JSON Schema, gRPC proto, or other platform-specific bindings). The key property is that the operational contract (semantic definition, retrieval logic, ACLs, and caching policies) originates from the registry; the compilation backend may emit language-specific adapters as required by the deployment environment.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Bounded Action Space and Semantic Closure</head><p>Because tools are compiled from a finite registry, the agent's action space is explicitly bounded. Agents cannot invoke arbitrary queries or synthesize new metrics at runtime; they must select from the compiled tool set.</p><p>This bounded action space has two practical consequences:</p><p>• Reduced hallucination surface. The LLM selects among predefined computational primitives rather than generating unconstrained queries.</p><p>• Governance enforcement at the boundary. Access control and caching policies are applied uniformly at the tool interface.</p><p>In this design, the LLM does not reason over raw telemetry. It reasons over deterministic outputs returned by well-defined metric tools.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Why Not Text-to-SQL?</head><p>A natural alternative is to expose the Gold schema directly and allow the LLM to generate SQL queries.</p><p>While expressive, this approach introduces two risks in enterprise environments:</p><p>• Unbounded query surface. SQL generation exposes the full schema and join space to probabilistic decoding. Erroneous joins, unbounded scans, or semantically incorrect filters can produce misleading results. • Governance and safety complexity. Enforcing read-only guarantees, cost limits, and semantic constraints requires additional sandboxing and validation layers. The registry-driven MCP approach constrains the LLM to a finite, version-controlled semantic API. Rather than synthesizing arbitrary queries, the model selects from curated metric tools whose behavior is deterministic and auditable. This reduces operational risk and simplifies compliance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Caching and Access Control as Interface Policies</head><p>Caching and access control are treated as interface-level policies rather than database implementation details.</p><p>Metrics are categorized by volatility, and caching durations are derived from that categorization. Similarly, user identity and permission scopes are propagated to the MCP layer, where tool invocation is authorized or denied based on declared metric categories.</p><p>By embedding these policies into the compilation process, governance becomes a property of the interface itself rather than an afterthought layered onto raw query access.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Summary</head><p>The registry-driven semantic compilation layer is the central architectural mechanism that enables deterministic grounding. It ensures alignment between tool specification and execution, bounds the agent's action space, and embeds governance directly into the runtime interface. The next section describes how deterministic ingestion and Medallion transformations produce the Gold artifacts on which this semantic layer depends.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IV. THE DATA FOUNDATION: DETERMINISTIC INGESTION AND TRANSFORMATION</head><p>The reliability of an agentic AI system is bounded by the reliability of its data pipeline. If telemetry ingestion is non-deterministic, inconsistent under retry, or sensitive to transient failures, then downstream reasoning inherits those inconsistencies.</p><p>Accordingly, the Write Path is designed around three operational guarantees:</p><p>• Replayability: Re-running ingestion over the same input produces the same Gold artifacts.</p><p>• Idempotency: Retries do not duplicate or corrupt metric state. • Versioned transformation: Metric definitions evolve explicitly and historical recomputation is supported. Figure <ref type="figure" target="#fig_3">3</ref> illustrates the transformation pipeline from heterogeneous sources to semantically compressed Gold artifacts.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Source Heterogeneity and Extraction Patterns</head><p>Enterprise telemetry originates from systems with differing consistency and mutation models. In practice, we observe three recurring ingestion patterns: a) State-based APIs.: Systems such as issue trackers and code repositories expose mutable entity state. Incremental extraction relies on monotonic update markers (e.g., timestamps or cursors). Re-execution over the same time window converges to the same logical state.</p><p>b) Event-based logs.: Observability systems emit append-only event streams. Rather than forwarding raw logs to the agent, we perform windowed aggregation at ingestion time, converting high-entropy event streams into compact metric summaries.</p><p>c) Snapshot datasets.: Some systems publish periodic full-state snapshots. These are ingested using replace-window semantics: the snapshot defines authoritative state for that interval.</p><p>This taxonomy is not novel; it reflects established backend practice. Its relevance here lies in making deterministic ingestion explicit as a prerequisite for reliable LLM grounding.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Idempotency and Convergence in Practice</head><p>Idempotency is implemented through deterministic record identifiers and upsert semantics. Each metric record is associated with a stable identity derived from source attributes (e.g., source identifier, timestamp, platform, metric name). Retries update existing records rather than inserting duplicates.</p><p>Operationally, this ensures:</p><p>• Replaying a failed job does not change logical Gold state.</p><p>• Concurrent ingestion tasks converge to a single consistent representation.</p><p>• Agents never observe duplicated or partially applied metrics.</p><p>Rather than presenting idempotency as a mathematical novelty, we treat it as a necessary systems guarantee that underpins deterministic grounding.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Execution Model and Throughput Considerations</head><p>Ingestion workloads are typically I/O-bound. We use a task orchestration engine (e.g., Airflow) to coordinate extraction, transformation, and storage steps, and apply parallelism at both the task and intra-task levels.</p><p>The specific concurrency primitives are not central to the architecture; the important property is that execution order and retries do not affect final Gold artifacts. Deterministic semantics are preserved regardless of scheduling interleavings.</p><p>(Implementation details such as thread pools and worker counts are omitted here for brevity; they do not alter the architectural guarantees.)</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Medallion Transformation as Deterministic Refinement</head><p>We adopt a Medallion-style refinement pipeline:</p><p>• Bronze: Immutable raw payload archive.</p><p>• Silver: Schema-harmonized and validated records.</p><p>• Gold: Deterministically computed metric artifacts intended for agent consumption.</p><p>The role of this pipeline is not merely data hygiene. It serves two architectural purposes: 1) To make metric computation explicit and versioncontrolled. 2) To reduce entropy before LLM interaction, exposing compact, semantically meaningful artifacts.</p><p>For example, multiple source fields (e.g., merged timestamps or resolution timestamps) may be normalized into a unified event timestamp during Silver-stage harmonization. Such transformations are declarative and versioned.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Versioned Transformation and Backfill</head><p>Metric definitions evolve. To preserve longitudinal consistency, transformations are versioned. When a definition changes, historical Gold artifacts can be recomputed from immutable Bronze data.</p><p>This supports:</p><p>• Reproducible historical analysis,</p><p>• Explicit evolution of metric semantics,</p><p>• Alignment between registry definitions and stored artifacts.</p><p>Deterministic ingestion and versioned transformation ensure that the semantic layer described in the previous section operates over stable, replayable computational artifacts rather than transient event streams. Implementation note: The prototype implements a tieredparallel fetcher (inter-task parallelism via the orchestration engine and intra-task concurrency via thread pools). A concise, illustrative Python listing is provided in Appendix A for reference; the specific concurrency primitives (thread vs. process pools, worker counts) are deployment-dependent and omitted here for clarity.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>V. STORAGE DESIGN AND SERVING CONSTRAINTS</head><p>The storage layer determines whether deterministic artifacts can be retrieved within interactive latency bounds. For agentic systems, overall response time consists of (a) artifact retrieval and (b) model inference. The architectural objective is to ensure that artifact retrieval remains predictably fast and does not dominate end-to-end interaction time.</p><p>Rather than focusing on database-specific optimizations, we align physical storage layout with observed access patterns and the semantic structure of Gold artifacts.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Workload-Aligned Storage</head><p>Gold artifacts are typically accessed via bounded time-range queries scoped by platform and metric. The dominant pattern resembles:</p><p>Query(metric, platform, t 1 : t 2 ).</p><p>To support this pattern efficiently, storage is organized using time-bucketed collections with compact metadata keys. This reduces per-record overhead, improves locality for time-range scans, and supports predictable query latency under moderate concurrency.</p><p>The goal is not maximal throughput, but bounded and stable latency for common metric retrieval operations.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Layer-Specific Granularity</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Different stages of the Medallion pipeline have different workload characteristics:</head><p>• Bronze and Silver layers prioritize ingestion fidelity and write throughput. • Gold layer prioritizes read efficiency for aggregated metrics. Accordingly, finer-grained storage is used for raw and harmonized data, while coarser-grained organization is used for aggregated Gold artifacts. This reflects the architectural distinction between raw telemetry and AI-facing context artifacts.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Indexing for Agent Access Patterns</head><p>Unlike traditional dashboard usage, agentic systems may issue repeated or multi-dimensional metric queries during iterative reasoning. To support this safely and predictably, compound indices are defined over the dominant filter axes (e.g., platform, metric, timestamp). This indexing strategy is not novel; it is standard database practice. Its relevance here lies in preserving the architectural invariant that retrieval latency remains bounded and subordinate to model inference time under representative workloads.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Prototype Observations</head><p>In prototype deployments where Gold artifacts fit in memory, aggregated metric retrieval remained consistently subsecond under moderate concurrent load, and cached responses were effectively immediate. In these scenarios, model inference latency dominated overall interaction time.</p><p>These observations validate that deterministic artifact retrieval can remain predictable and does not undermine the architectural separation between data computation and probabilistic reasoning.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Role Within the Architecture</head><p>Storage is therefore not presented as a novel database contribution, but as an enabling layer: it ensures that deterministically computed Gold artifacts can be served within interactive constraints. The semantic compilation layer described earlier depends on this stability but does not rely on any databasespecific mechanism beyond standard indexing and time-range optimization.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VI. REAL-TIME INTELLIGENCE: EVENT-DRIVEN PUSH PATH</head><p>While the pull interface enables bounded historical reasoning, operational environments also require timely awareness of state transitions. A purely query-driven system delays anomaly detection until a user explicitly invokes a tool. The push path extends deterministic grounding into the temporal domain by propagating updates from Gold artifacts to monitoring and agent workflows.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Streaming Rather Than Polling</head><p>Traditional polling-based alert systems introduce latency proportional to the polling interval and may miss transient state changes between checks. In contrast, change-stream mechanisms emit events whenever Gold artifacts are inserted or updated.</p><p>Because these events are derived directly from deterministically computed Gold artifacts, push-based detection operates over semantically stable metrics rather than raw telemetry. This preserves the architectural separation between deterministic computation and probabilistic reasoning even in real-time workflows.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Delivery Semantics and Operational Convergence</head><p>Change streams provide at-least-once delivery semantics. In practice, this means that a given update may be delivered more than once. The alert handling logic is therefore implemented to be idempotent: processing the same update multiple times does not alter the final alert state.</p><p>Operationally, this ensures:</p><p>• No missed state transitions under restart or transient failure,</p><p>• No duplicate notifications due to replayed events, • Convergent alert state across restarts. Rather than presenting convergence as a formal property, we treat it as a practical requirement for reliable event-driven systems.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Relative Severity and Stability Controls</head><p>Metrics vary in scale and interpretation across domains (e.g., crash rate versus deployment frequency). Severity is therefore evaluated relative to configured thresholds, allowing consistent escalation behavior across heterogeneous metric types.</p><p>Event-driven systems are also susceptible to oscillation near thresholds. To mitigate this, two stabilization mechanisms are applied:</p><p>• Hysteresis: Resolution requires exceeding a safety margin beyond the threshold, preventing rapid flapping. • Cooldown windows: Repeated alerts for the same metric and severity are rate-limited within a defined interval. These mechanisms ensure that push-based detection remains operationally stable without altering underlying metric semantics.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Shared Semantics Between Push and Pull</head><p>A key architectural property is that both pull-based reasoning and push-based alerting operate over the same Gold artifacts and compiled metric definitions. There is no separate computation path for alerting.</p><p>This symmetry eliminates a common failure mode in observability systems, where dashboards and alert pipelines compute metrics differently. By reusing deterministic Gold artifacts across both interaction modes, the system maintains semantic consistency across retrospective analysis and realtime detection.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VII. COMPARISON TO EXISTING APPROACHES</head><p>Enterprise AI-assisted observability systems generally adopt one of four grounding strategies:</p><p>1) Retrieval-Augmented Generation (RAG) over raw logs, 2) Text-to-SQL over structured schemas, 3) Dashboard-based LLM overlays, 4) Vendor-integrated AI assistants tightly coupled to proprietary platforms. These approaches represent different design choices along four dimensions:</p><p>• Determinism: Is metric computation definitionally fixed or probabilistically inferred? • Token Scaling: Does context size scale with raw telemetry or with aggregated metrics? • Interaction Model: Is the system purely pull-based, or does it support push-based propagation? • Semantic Governance: Are metric definitions explicit, version-controlled, and auditable? Table <ref type="table">I</ref> summarizes these structural distinctions.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Retrieval-Augmented Generation over Logs</head><p>RAG systems retrieve top-k log fragments using vector similarity and present them to the LLM for reasoning <ref type="bibr" target="#b7">[8]</ref>. This approach is well-suited for unstructured knowledge tasks.</p><p>However, in enterprise telemetry contexts:</p><p>• Token usage scales with the number of retrieved log entries. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Registry-Controlled</head><p>• Retrieval is probabilistic and may surface semantically adjacent but operationally distinct events. • Metric computation is implicitly performed inside the model rather than through deterministic aggregation. The registry-driven architecture differs by performing metric aggregation upstream and exposing only deterministic Gold artifacts. This reduces token growth and ensures repeated tool invocation over identical state yields identical outputs.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Why Not Text-to-SQL?</head><p>Text-to-SQL systems translate natural language into executable SQL and can provide flexible access to structured datasets. However, in enterprise agentic workflows they introduce operational risks that are not addressed by syntactic correctness alone:</p><p>1) Execution safety: Generated SQL can be syntactically valid but semantically harmful (e.g., unbounded scans, cross-tenant joins, or inadvertent exposure of sensitive fields) unless a robust sandbox and query-validation layer is present. 2) Resource and latency risk: LLM-generated queries may lack appropriate predicates and cause expensive full-table scans or unpredictable execution times, undermining interactive responsiveness. 3) Governance complexity: Allowing unconstrained query generation expands the agent's action surface, complicating audit trails, access control, and reproducibility. The registry-driven MCP approach instead exposes a bounded, version-controlled set of semantic primitives (tools) that map to deterministic Gold artifacts. This reduces the operational surface area: agents select audited computational primitives rather than generating arbitrary queries, simplifying execution safety, cost predictability, and governance.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Dashboard-Based LLM Overlays</head><p>Business intelligence platforms increasingly offer naturallanguage interfaces layered over pre-existing dashboards.</p><p>In these systems:</p><p>• Column semantics are inferred from schema names and metadata.</p><p>• Interaction is typically pull-oriented.</p><p>• Tool definitions are not necessarily version-controlled alongside transformation logic.</p><p>While useful for exploratory analysis, such overlays may not guarantee alignment between metric definition and implementation as schemas evolve.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Vendor-Integrated AI Assistants</head><p>Observability vendors provide AI-driven anomaly detection and summarization within their proprietary ecosystems.</p><p>These systems often:</p><p>• Encapsulate metric transformations within internal pipelines, • Restrict cross-platform correlation to telemetry stored within a single vendor stack, • Abstract away transformation logic from user control. The registry-driven architecture differs by making metric definitions explicit and version-controlled, and by integrating heterogeneous sources into a unified Gold representation before inference.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>E. Architectural Trade-Offs</head><p>The distinguishing property of the proposed architecture is not a new learning algorithm, but an explicit architectural constraint: deterministic computation and semantic compilation precede probabilistic reasoning.</p><p>Compared to RAG, the system reduces probabilistic retrieval from raw logs. Compared to Text-to-SQL, it bounds the agent's action space. Compared to dashboard overlays and vendor assistants, it centralizes metric semantics in a versioncontrolled registry.</p><p>These trade-offs prioritize determinism, governance, and reproducibility over maximal query expressiveness. In regulated or operationally sensitive environments, such constraints may be preferable to fully generative query access.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>VIII. SYSTEM IMPLEMENTATION AND ARCHITECTURAL CASE STUDY</head><p>This section presents a prototype implementation and case study intended to validate the architectural feasibility of deterministic grounding. The objective is not to establish largescale benchmark superiority, but to examine whether the proposed separation between deterministic computation and probabilistic reasoning holds under representative enterprise workloads.</p><p>The prototype integrates multiple telemetry sources and was deployed on commodity server hardware using standard data engineering components. The focus of evaluation is threefold:</p><p>1) Reduction of cross-system investigation overhead, 2) Preservation of interactive latency under agent usage, 3) Practical impact of upstream semantic aggregation on token usage.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Case Study: Incident Investigation Workflow</head><p>A central motivation for deterministic grounding is reducing investigation friction during operational incidents. We evaluated a representative scenario:</p><p>"Why did the iOS crash rate spike yesterday?" Manual Workflow: In traditional workflows, engineers: 1) Filter observability dashboards by platform and time window, 2) Inspect recent CI/CD deployments, 3) Cross-reference issue tracker tickets and change logs, 4) Correlate findings across multiple interfaces. This process requires manual context switching and implicit reasoning across heterogeneous systems.</p><p>Agent-Assisted Workflow: Under the proposed architecture:</p><p>1) The engineer issues a natural-language query.</p><p>2) The agent selects deterministic metric tools (e.g., stability, recent deployments).</p><p>3) The agent synthesizes an explanation over returned Gold artifacts. a) Observational Outcome.: Across representative scenarios, agent-assisted workflows reduced multi-step crosssystem navigation into a single bounded interaction. While not statistically powered as a controlled user study, the case study demonstrates that deterministic compilation materially simplifies investigative reasoning by consolidating metric semantics into a single interface.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>B. Interactive Latency Characteristics</head><p>For agentic systems to remain usable, artifact retrieval must not dominate overall response time.</p><p>Under moderate concurrent load in the prototype deployment:</p><p>• Aggregated metric retrieval completed within interactive bounds, • Cached queries were effectively immediate, • End-to-end latency was dominated by model inference rather than data access. These observations validate the architectural goal that deterministic retrieval remains subordinate to inference latency under typical workloads.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>C. Token Scaling Behavior</head><p>Enterprise telemetry can span thousands of raw log events for a single investigative window. When grounding directly on raw logs, token consumption grows with the number of retrieved events.</p><p>In contrast, the registry-driven architecture exposes compact, pre-aggregated Gold artifacts. Token usage therefore scales with the number of selected metrics rather than the number of underlying log entries.</p><p>Prototype simulations over multi-hour telemetry windows confirmed that raw-log serialization produces token counts substantially larger than aggregated metric representations. While exact savings depend on workload characteristics, the qualitative reduction is significant and consistent with the architectural design.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>D. Limitations</head><p>This implementation has several limitations:</p><p>• Prototype scope. Results reflect a prototype deployment and representative workloads rather than controlled, large-scale benchmarks. • Limited sample size. Case studies involve a small number of engineers and scenarios. • Model variability. Latency characteristics depend on contemporary LLM inference performance. • Comparative baselines. The system was not evaluated against a full Text-to-SQL or GraphRAG implementation under identical conditions. The purpose of this section is therefore architectural validation rather than algorithmic benchmarking. The findings demonstrate feasibility and operational coherence of deterministic grounding, but do not claim statistical dominance over alternative grounding techniques.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>IX. CONCLUSION AND FUTURE DIRECTIONS</head><p>This paper presented REGAL, a registry-driven architecture for grounding AI systems in enterprise telemetry through deterministic data computation and semantic compilation. Rather than treating LLMs as primary processors of raw telemetry, the proposed design constrains probabilistic reasoning to operate exclusively over replayable, versioncontrolled artifacts.</p><p>The central contribution is the registry-driven compilation pattern: metric semantics, retrieval logic, and governance metadata are declared once and compiled into a bounded MCP tool interface. This "interface-as-code" approach mitigates tool drift, embeds access control and caching policies at the semantic boundary, and reduces the hallucination surface by restricting the agent's action space.</p><p>The accompanying deterministic ingestion and Medallion pipeline provide the necessary foundation: telemetry is transformed into stable Gold artifacts prior to inference. The prototype implementation and case study demonstrate that this separation is operationally feasible, preserves interactive latency, and materially reduces cross-system investigative overhead. While the system is not evaluated as a largescale benchmark against alternative grounding mechanisms, the results validate the architectural coherence of deterministic grounding in practice.</p><p>More broadly, this work argues that scalable enterprise agentic AI benefits from architectural constraints. By relocating aggregation, schema harmonization, and metric definition into explicit, version-controlled computation layers, correctness and governance shift from prompt design to system design. In regulated and operationally sensitive environments, such constraints may be preferable to fully generative query access.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>A. Future Directions</head><p>Several research and engineering directions emerge from this work:</p><p>• Autonomous remediation under constraints. Extending the architecture to support bounded corrective actions requires formal safety policies that distinguish transient anomalies from systemic faults. • Federated semantic compilation. Multiple registry domains (e.g., infrastructure, CI/CD, security) may interoperate through federated MCP interfaces, raising questions of cross-agent trust and capability negotiation. • Causal and counterfactual reasoning. Integrating causal models into deterministic Gold-layer transformations could support confidence estimation and counterfactual analysis in root-cause workflows. • Formal verification of interface invariants. Static analysis or lightweight formal methods could verify properties such as tool-definition alignment and idempotent replayability in enterprise settings. Deploying deterministic grounding in production environments also requires continued attention to privacy, access control, and compliance. Capability-scoped access and audit logging at the MCP boundary are essential to maintaining enterprise governance guarantees.</p><p>In summary, REGAL contributes a practical system architecture and design pattern for enterprise LLM grounding. Its value lies not in new learning algorithms, but in making deterministic computation and semantic compilation first-class architectural primitives for agentic systems.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 .</head><label>1</label><figDesc>Fig. 1. High-level architecture: sources are deterministically refined into versioned Gold artifacts; agentic LLMs consume only those artifacts. The thick boundary emphasizes the deterministic → probabilistic handoff.</figDesc><graphic coords="2,61.52,474.59,225.94,88.22" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2 .</head><label>2</label><figDesc>Fig. 2. Read path and serving: the registry compiles declarative metric definitions into MCP tools; agents invoke MCP tools (pull) and the Gold layer can also drive alerts (push). Governance (ACLs, audit) is enforced at the MCP boundary.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Figure 2</head><label>2</label><figDesc>Figure 2 illustrates the read path: deterministic Gold artifacts are exposed through a compiled MCP interface, and agents interact only with this bounded tool surface.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3"><head>Fig. 3 .</head><label>3</label><figDesc>Fig. 3. Write path (Medallion ELT): ingestion, deterministic upserts, Bronze (raw archive), Silver (schema harmonization), and Gold (AI context artifacts).</figDesc><graphic coords="5,48.96,115.47,250.96,59.08" type="bitmap" /></figure>
+		</body>
+		<back>
+			<div type="annex">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>APPENDIX</head><p>This appendix contains illustrative implementation details referenced in the main text. These examples are prototypelevel and intended to clarify the architectural pattern rather than prescribe production settings.</p><p>A. Tiered Parallel Fetching (illustrative) Note: Worker counts and concurrency primitives should be chosen based on API rate limits, latency profiles, and the orchestration system's scheduling model. The architecture requires deterministic upserts and idempotent handlers rather than a specific concurrency mechanism.</p></div>			</div>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<monogr>
+		<author>
+			<persName><forename type="first">N</forename><surname>Forsgren</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Humble</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Kim</surname></persName>
+		</author>
+		<title level="m">Accelerate: The Science of Lean Software and DevOps</title>
+		<imprint>
+			<publisher>IT Revolution Press</publisher>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Webb, Dora or Mohala Dora</title>
+		<author>
+			<orgName type="collaboration">DORA</orgName>
+		</author>
+		<idno type="DOI">10.1093/benz/9780199773787.article.b00195087</idno>
+		<ptr target="https://dora.dev/" />
+	</analytic>
+	<monogr>
+		<title level="m">DevOps Research and Assessment</title>
+		<imprint>
+			<publisher>Oxford University Press</publisher>
+			<date type="published" when="2011-10-31" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<monogr>
+		<ptr target="https://modelcontextprotocol.io/specification/" />
+		<title level="m">Model Context Protocol (MCP) Working Group</title>
+		<imprint/>
+	</monogr>
+	<note>The Model Context Protocol -Specification</note>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<monogr>
+		<title level="m" type="main">The Medallion Architecture: Best Practices for Data Lakehouses</title>
+		<author>
+			<persName><surname>Databricks</surname></persName>
+		</author>
+		<ptr target="https://www.databricks.com/glossary/medallion-architecture" />
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Time Series Collections</title>
+		<author>
+			<persName><forename type="first">Mongodb</forename><surname>Inc</surname></persName>
+		</author>
+		<ptr target="https://www.mongodb.com/docs/v7.0/core/timeseries-collections/" />
+	</analytic>
+	<monogr>
+		<title level="j">MongoDB Manual</title>
+		<imprint>
+			<biblScope unit="volume">7</biblScope>
+			<biblScope unit="issue">0</biblScope>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<monogr>
+		<title level="m" type="main">Apache Airflow: Platform for programmatic workflow authoring</title>
+		<ptr target="https://airflow.apache.org/" />
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+		<respStmt>
+			<orgName>Apache Software Foundation</orgName>
+		</respStmt>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<monogr>
+		<title level="m" type="main">FastMCP: Python client/server utilities for MCP</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Lowin</surname></persName>
+		</author>
+		<ptr target="https://github.com/AI-App/JLowin.FastMCP" />
+		<imprint>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">GitHub repository</note>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<monogr>
+		<title level="m" type="main">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Lewis</surname></persName>
+		</author>
+		<ptr target="https://arxiv.org/abs/2005.11401" />
+		<imprint>
+			<date type="published" when="2020">2020</date>
+		</imprint>
+	</monogr>
+	<note type="report_type">NeurIPS Workshop / arXiv</note>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<monogr>
+		<title level="m" type="main">LLaMA: Open and Efficient Foundation Language Models</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Touvron</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2302.13971</idno>
+		<ptr target="https://arxiv.org/abs/2302.13971" />
+		<imprint>
+			<date type="published" when="2023">2023</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<monogr>
+		<title level="m" type="main">Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Zhong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Xiong</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Socher</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:1709.00103</idno>
+		<ptr target="https://arxiv.org/abs/1709.00103" />
+		<imprint>
+			<date type="published" when="2017">2017</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<title level="a" type="main">Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-SQL Task</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Yu</surname></persName>
+		</author>
+		<ptr target="https://aclanthology.org/D18-1425/" />
+	</analytic>
+	<monogr>
+		<title level="m">EMNLP</title>
+		<imprint>
+			<date type="published" when="2018">2018</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<monogr>
+		<author>
+			<persName><forename type="first">H</forename><surname>Han</surname></persName>
+		</author>
+		<idno type="arXiv">arXiv:2501.00309</idno>
+		<ptr target="https://arxiv.org/abs/2501.00309" />
+		<title level="m">Retrieval-Augmented Generation with Graphs (GraphRAG)</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">MapReduce</title>
+		<author>
+			<persName><forename type="first">Jeffrey</forename><surname>Dean</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Sanjay</forename><surname>Ghemawat</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/1327452.1327492</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Communications of the ACM</title>
+		<title level="j" type="abbrev">Commun. ACM</title>
+		<idno type="ISSN">0001-0782</idno>
+		<idno type="ISSNe">1557-7317</idno>
+		<imprint>
+			<biblScope unit="volume">51</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="107" to="113" />
+			<date type="published" when="2004">2004</date>
+			<publisher>Association for Computing Machinery (ACM)</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Dynamo</title>
+		<author>
+			<persName><forename type="first">Giuseppe</forename><surname>Decandia</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Deniz</forename><surname>Hastorun</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Madan</forename><surname>Jampani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Gunavardhan</forename><surname>Kakulapati</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Avinash</forename><surname>Lakshman</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Alex</forename><surname>Pilchin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Swaminathan</forename><surname>Sivasubramanian</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Peter</forename><surname>Vosshall</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Werner</forename><surname>Vogels</surname></persName>
+		</author>
+		<idno type="DOI">10.1145/1294261.1294281</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Proceedings of twenty-first ACM SIGOPS symposium on Operating systems principles</title>
+		<meeting>twenty-first ACM SIGOPS symposium on Operating systems principles</meeting>
+		<imprint>
+			<publisher>ACM</publisher>
+			<date type="published" when="2007-10-14">2007</date>
+			<biblScope unit="page" from="205" to="220" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">Highly Available Transactions: Virtues and Limitations</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Bailis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">PVLDB / VLDB</title>
+		<imprint>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<monogr>
+		<title level="m" type="main">Causality</title>
+		<author>
+			<persName><forename type="first">Judea</forename><surname>Pearl</surname></persName>
+		</author>
+		<idno type="DOI">10.1017/cbo9780511803161</idno>
+		<imprint>
+			<date type="published" when="2009-09-14">2009</date>
+			<publisher>Cambridge University Press</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<monogr>
+		<title level="m" type="main">Foundations of Databases</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Abiteboul</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="1995">1995</date>
+			<publisher>Addison-Wesley</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>
