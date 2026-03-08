@@ -161,7 +161,12 @@ This script will:
 2. Generate new XML files using Grobid
 3. Run the three analysis scripts
 
+Using Docker:
+1: first have grobit running
+docker run -d --rm --init \-p 8070:8070 \-e JAVA_OPTS="-Xmx4g -Xms2g" \--name grobid \grobid/grobid:0.8.0
 
+2:then run the dockered program
+docker run --rm -it   -v $(pwd):/app   --network host  grobid-analysis
 
  Requirements
 

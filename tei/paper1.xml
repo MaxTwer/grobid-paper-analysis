@@ -15,8 +15,9 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 			<sourceDesc>
 				<biblStruct>
 					<analytic>
-						<author>
+						<author role="corresp">
 							<persName><forename type="first">Xin</forename><surname>Xia</surname></persName>
+							<email>xx86245@uga.com</email>
 							<affiliation key="aff0">
 								<orgName type="institution">University of Georgia</orgName>
 								<address>
@@ -26,26 +27,6 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 									<country key="US">USA</country>
 								</address>
 							</affiliation>
-						</author>
-						<author>
-							<persName><forename type="first">Nejla</forename><surname>Yuruk</surname></persName>
-						</author>
-						<author>
-							<persName><forename type="first">Yun</forename><surname>Wang</surname></persName>
-						</author>
-						<author>
-							<persName><forename type="first">Xiaoming</forename><surname>Zhai</surname></persName>
-							<affiliation key="aff0">
-								<orgName type="institution">University of Georgia</orgName>
-								<address>
-									<postCode>30605</postCode>
-									<settlement>Athens</settlement>
-									<region>GA</region>
-									<country key="US">USA</country>
-								</address>
-							</affiliation>
-						</author>
-						<author>
 							<affiliation key="aff1">
 								<orgName type="institution">Gazi University</orgName>
 								<address>
@@ -68,8 +49,10 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 		</fileDesc>
 		<encodingDesc>
 			<appInfo>
-				<application version="0.8.0" ident="GROBID" when="2026-03-07T16:43+0000">
+				<application version="0.8.2" ident="GROBID" when="2026-03-08T23:21+0000">
 					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<label type="revision">0c5e0cf</label>
+					<label type="parameters">startPage=-1, endPage=-1, consolidateCitations=1, consolidateHeader=1, consolidateFunders=0, includeRawAffiliations=false, includeRawCitations=false, includeRawCopyrights=false, generateTeiIds=false, generateTeiCoordinates=[], sentenceSegmentation=false, flavor=null</label>
 					<ref target="https://github.com/kermitt2/grobid"/>
 				</application>
 			</appInfo>
@@ -95,17 +78,17 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 <div xmlns="http://www.tei-c.org/ns/1.0"><head>2.2</head><p>The Role of Rubrics in AI Feedback Systems</p><p>Rubrics are widely used in education to clarify expectations, guide assessment, and support consistent and meaningful feedback <ref type="bibr" target="#b9">[10]</ref>. When AI systems are used to evaluate constructed responses and provide formative feedback, rubrics become especially important because they translate disciplinary standards (e.g., scientific explanation, evidence use, terminology precision) into concrete criteria that can be applied systematically at scale. In this sense, rubrics serve as a bridge between disciplinary expertise and automated decision-making, enabling feedback that is interpretable and aligned with instructional intent.</p><p>A large body of automated scoring research has shown that rubric design directly shapes the validity and reliability of automated scoring, and the quality of feedback derived from those scores. For example, research on automated scoring of constructedresponse science items emphasizes that complex rubrics can be scored automatically with promising reliability, but that performance depends heavily on assessment and rubric design choices <ref type="bibr" target="#b21">[22]</ref>. More recently, with the rise of large language models (LLMs), building on auto-scoring research, rubrics have been used to constrain and shape feedback generation. Several emerging systems guide LLM feedback using expert-defined criteria or rubric specifications to improve alignment and reduce generic output. For instance, <ref type="bibr" target="#b22">[23]</ref> describes an LLM-assisted feedback tool in which instructordefined criteria are used to guide automated responses to open-ended questions, emphasizing that criteria-based scaffolding supports more targeted and useful feedback. At the same time, empirical comparisons caution that generative AI feedback may fall short of human feedback on criteria-based qualities, such as prioritizing key issues and providing clear revision directions, when prompts and evaluative criteria are insufficiently specified <ref type="bibr" target="#b20">[21]</ref>.</p></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.3">Learning Progressions as Pedagogical Foundation</head><p>Learning progressions (LP) offer a theoretically grounded alternative for structuring assessment and feedback <ref type="bibr" target="#b23">[24,</ref><ref type="bibr" target="#b24">25]</ref>. LP describes empirically informed pathways through which students' understanding of core ideas typically develops, including intermediate conceptions and common misconceptions <ref type="bibr" target="#b11">[12,</ref><ref type="bibr" target="#b12">13]</ref>. In science education, LP has been used to guide curriculum design, assessment development, and instructional decisionmaking by articulating what it means to make progress toward disciplinary understanding.</p><p>Prior research has demonstrated the value of learning progressions as a foundation for assessment and automated analysis. LP-aligned assessments have been shown to improve the interpretability of student responses by linking observable performance features to underlying levels of understanding <ref type="bibr" target="#b18">[19]</ref>. LP-aligned rubrics have been shown to support machine scoring that aligns with human judgments while providing interpretable indicators of student understanding. Prior research has leveraged learning progressions to support automated scoring and diagnostic classification <ref type="bibr" target="#b18">[19,</ref><ref type="bibr" target="#b25">26,</ref><ref type="bibr" target="#b26">27]</ref>. For example, LP-aligned rubrics have been used to map student responses to developmental levels and to guide machine scoring of scientific explanations. However, most of this work has focused on classification accuracy or score validity, rather than on the quality of feedback generated for learners. As a result, it remains unclear whether LPs can effectively support the generation of high-quality, pedagogically meaningful feedback when used as the basis for automated rubric construction.</p><p>The present study addresses this gap by comparing two AI feedback generation pipelines in a middle school chemistry context involving a gas properties explanation task. By comparing these two pipelines using a within-subjects design, this work provides empirical evidence to address whether learning progressions can serve as a general pedagogical foundation that supports high-quality AI-generated feedback without relying on task-specific expert rubric authoring.</p></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="3">Methodology</head></div>
-<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1">Context and Datasets</head><p>The assessment task examined in this study was an open-ended, NGSS-aligned middle school chemistry task focused on students' understanding of gas properties. Students were presented with data from an investigation involving four gas samples, including information about flammability, volume, and density, and were asked to construct a written explanation identifying which gases could be the same based on characteristic properties and to justify their reasoning using evidence from the data table. The task was designed to elicit students' scientific explanations based on data interpretation, focusing on students' ability to analyze and interpret experimental data to determine whether substances are the same based on characteristic properties <ref type="bibr">(Council et al., 2013)</ref>. This task was selected from the Next Generation Science Assessment task set <ref type="bibr" target="#b27">[28]</ref> and falls within the physical sciences domain of Matter and Its Characteristics. The task was intentionally open-ended to encourage students to articulate reasoning, connect evidence to claims, and use appropriate scientific terminology. As such, it provides a rich context for examining formative feedback quality, particularly feedback that supports explanation construction rather than simply evaluating correctness, as Figure <ref type="figure" target="#fig_0">1</ref> shows below.</p><p>A total of 207 student responses used in this study were randomly drawn from a larger dataset of 1,200 middle school student responses collected through an NGSSaligned online assessment system <ref type="bibr">[29]</ref>. Student data were anonymized to protect privacy; therefore, no demographic information was available. Based on the geographic distribution of participating teachers, the dataset represents a broad cross-section of U.S. middle school students. The selected responses were used exclusively for generating and evaluating AI-produced formative feedback. The focus is on how different AI feedback generation pipelines respond to students' explanations and on the quality of that feedback across Clarity, Accuracy, Relevance, Engagement and Motivation, and Reflectiveness dimensions. </p></div>
-<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2">Study Design</head><p>We employed a within-subjects design to compare two AI-generated feedback pipelines. Each student response received feedback generated by both pipelines, allowing for direct comparison of feedback quality while both pipelines used the same student responses, task context, feedback structure, and large language model (GPT-5.1; temperature = 0). The learning progression is drawn from <ref type="bibr" target="#b28">[30]</ref>, including four levels (as Figure <ref type="figure">2</ref> shows below). The human-expert Rubric is listed in Figure <ref type="figure">3</ref>.</p><p>The two feedback pipelines differed in how the pedagogical structure was provided to the AI system:</p><p>1. Expert-Rubric Pipeline: Feedback was generated using a human-authored, task-specific analytic rubric designed by science education experts. The rubric specified key conceptual criteria, common misconceptions, and performance expectations for the task. 2. Learning-Progression Pipeline: Feedback was generated using a task-specific rubric automatically derived from a five-level learning progression describing students' developing understanding of gas properties. In this pipeline, the AI first instantiated rubric criteria based on the learning progression and then used the generated rubric to evaluate student responses and produce feedback. All other components, including task prompts, feedback templates, and the underlying language model, were held constant across conditions.</p><p>Feedback structure includes five steps: a) briefly acknowledge the student's answer, b) If students answer is not correct or partially correct, make the limitation visible or clarify and strengthen the missing key scientific idea, c) provide task-relevant next steps to improve the answer, d) prompts students to reflect on or justify their thinking, e) keep the feedback brief and clear. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.1">Context and Datasets</head><p>The assessment task examined in this study was an open-ended, NGSS-aligned middle school chemistry task focused on students' understanding of gas properties. Students were presented with data from an investigation involving four gas samples, including information about flammability, volume, and density, and were asked to construct a written explanation identifying which gases could be the same based on characteristic properties and to justify their reasoning using evidence from the data table. The task was designed to elicit students' scientific explanations based on data interpretation, focusing on students' ability to analyze and interpret experimental data to determine whether substances are the same based on characteristic properties <ref type="bibr">(Council et al., 2013)</ref>. This task was selected from the Next Generation Science Assessment task set <ref type="bibr" target="#b27">[28]</ref> and falls within the physical sciences domain of Matter and Its Characteristics. The task was intentionally open-ended to encourage students to articulate reasoning, connect evidence to claims, and use appropriate scientific terminology. As such, it provides a rich context for examining formative feedback quality, particularly feedback that supports explanation construction rather than simply evaluating correctness, as Figure <ref type="figure" target="#fig_0">1</ref> shows below.</p><p>A total of 207 student responses used in this study were randomly drawn from a larger dataset of 1,200 middle school student responses collected through an NGSSaligned online assessment system <ref type="bibr" target="#b28">[29]</ref>. Student data were anonymized to protect privacy; therefore, no demographic information was available. Based on the geographic distribution of participating teachers, the dataset represents a broad cross-section of U.S. middle school students. The selected responses were used exclusively for generating and evaluating AI-produced formative feedback. The focus is on how different AI feedback generation pipelines respond to students' explanations and on the quality of that feedback across Clarity, Accuracy, Relevance, Engagement and Motivation, and Reflectiveness dimensions. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.2">Study Design</head><p>We employed a within-subjects design to compare two AI-generated feedback pipelines. Each student response received feedback generated by both pipelines, allowing for direct comparison of feedback quality while both pipelines used the same student responses, task context, feedback structure, and large language model (GPT-5.1; temperature = 0). The learning progression is drawn from <ref type="bibr" target="#b29">[30]</ref>, including four levels (as Figure <ref type="figure">2</ref> shows below). The human-expert Rubric is listed in Figure <ref type="figure">3</ref>.</p><p>The two feedback pipelines differed in how the pedagogical structure was provided to the AI system:</p><p>1. Expert-Rubric Pipeline: Feedback was generated using a human-authored, task-specific analytic rubric designed by science education experts. The rubric specified key conceptual criteria, common misconceptions, and performance expectations for the task. 2. Learning-Progression Pipeline: Feedback was generated using a task-specific rubric automatically derived from a five-level learning progression describing students' developing understanding of gas properties. In this pipeline, the AI first instantiated rubric criteria based on the learning progression and then used the generated rubric to evaluate student responses and produce feedback. All other components, including task prompts, feedback templates, and the underlying language model, were held constant across conditions.</p><p>Feedback structure includes five steps: a) briefly acknowledge the student's answer, b) If students answer is not correct or partially correct, make the limitation visible or clarify and strengthen the missing key scientific idea, c) provide task-relevant next steps to improve the answer, d) prompts students to reflect on or justify their thinking, e) keep the feedback brief and clear. Fig. 3. Learning Progression for Evidence-based Explanations</p></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.3">AI Feedback Generation</head><p>Feedback in both pipelines was generated using the same large language model (GPT-5.1). For each student response, the model was prompted to (a) evaluate the response according to the provided rubric and (b) generate formative feedback aligned with the evaluation. Feedback was designed to be developmentally appropriate, supportive in tone, and focused on helping students improve their scientific explanations.</p><p>To ensure comparability, both pipelines used identical feedback prompts and output constraints, differing only in the source of the rubric (human-authored versus learningprogression). This design isolates the effect of rubric origin on feedback quality.</p></div>
-<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.4">Instrument</head><p>Feedback quality was evaluated using a multi-dimensional analytic rubric adapted and modified from the instrument developed by Field et al. ( <ref type="formula">2025</ref>) <ref type="bibr" target="#b29">[31]</ref>. The rubric assessed five dimensions of feedback quality, including Clarity, Accuracy, Relevance, Engagement and Motivation, and Reflectiveness. Each dimension was scored on a 3-point scale (0-2), yielding a maximum total feedback quality score of 20 (as Table <ref type="table" target="#tab_0">1</ref> shows below). Feedback prompts students to reflect on or justify their thinking.</p></div>
-<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.5">Coding Procedure and Inter-Rater Reliability</head><p>Two human coders were trained using a shared codebook. Firstly, they independently coded an initial set of 20 AI-generated feedback, including rubric-driven and LP-driven feedback. The coders then met to discuss all discrepancies and refine their shared understanding of the rubric, revising interpretations as needed until full consensus (100% agreement) was reached on this calibration set. Following the calibration process, the coders independently double-coded a randomly selected 20% of the full dataset to assess inter-rater reliability. Inter-rater reliability was calculated using both percent agreement and Cohen's Kappa(κ) for rubric dimensions with sufficient variability <ref type="bibr" target="#b30">[32,</ref><ref type="bibr" target="#b31">33]</ref>. Percent agreement across dimensions ranged from 89% to 100% (as Table <ref type="table" target="#tab_1">2</ref> shows below). Cohen's κ values indicated moderate to strong agreement (κ = .66-.88). For several dimensions, κ could not be computed due to its sensitivity to the prevalence of agreement and limited score variance. After establishing acceptable reliability, the remaining feedback responses were randomly and equally divided between the two coders for independent coding <ref type="bibr" target="#b32">[34]</ref>. </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.4">Instrument</head><p>Feedback quality was evaluated using a multi-dimensional analytic rubric adapted and modified from the instrument developed by Field et al. ( <ref type="formula">2025</ref>) <ref type="bibr" target="#b30">[31]</ref>. The rubric assessed five dimensions of feedback quality, including Clarity, Accuracy, Relevance, Engagement and Motivation, and Reflectiveness. Each dimension was scored on a 3-point scale (0-2), yielding a maximum total feedback quality score of 20 (as Table <ref type="table" target="#tab_0">1</ref> shows below). Feedback prompts students to reflect on or justify their thinking.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.5">Coding Procedure and Inter-Rater Reliability</head><p>Two human coders were trained using a shared codebook. Firstly, they independently coded an initial set of 20 AI-generated feedback, including rubric-driven and LP-driven feedback. The coders then met to discuss all discrepancies and refine their shared understanding of the rubric, revising interpretations as needed until full consensus (100% agreement) was reached on this calibration set. Following the calibration process, the coders independently double-coded a randomly selected 20% of the full dataset to assess inter-rater reliability. Inter-rater reliability was calculated using both percent agreement and Cohen's Kappa(κ) for rubric dimensions with sufficient variability <ref type="bibr" target="#b31">[32,</ref><ref type="bibr" target="#b32">33]</ref>. Percent agreement across dimensions ranged from 89% to 100% (as Table <ref type="table" target="#tab_1">2</ref> shows below). Cohen's κ values indicated moderate to strong agreement (κ = .66-.88). For several dimensions, κ could not be computed due to its sensitivity to the prevalence of agreement and limited score variance. After establishing acceptable reliability, the remaining feedback responses were randomly and equally divided between the two coders for independent coding <ref type="bibr" target="#b33">[34]</ref>. </p></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.6">Data Analysis</head><p>Descriptive statistics were calculated for each feedback sub-dimension score under both rubric-driven and LP-driven approaches. To examine whether the two feedback-generating methods differed systematically, paired-samples t-tests were conducted for each sub-dimension. Statistical analyses were conducted using R, with an alpha level of .05 applied for all tests.</p></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="4">Results</head></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.1">Quality of the AI-generated Feedback</head><p>Across all sub-dimensions, mean scores were high for both pipelines (M ≥ 1.61 on a 0-2 scale), indicating consistently strong feedback quality regardless of the rubric. For Clarity, mean scores for the Language sub-dimension reached the maximum value (M = 2.00) in both pipelines, indicating consistently age-appropriate and comprehensible feedback. Structure scores were similarly high (Rubric-driven: M = 1.87, SD = 0.33; LP-driven: M = 1.85, SD = 0.36).</p><p>For Accuracy, both scientific Correctness and Terminology precision achieved full mean scores (M = 2.00) with no observed variance across conditions, indicating uniformly accurate use of scientific content and terminology in both pipelines. Both Rubric-driven and LP-driven feedback contained no factual or conceptual errors and used scientific terminology correctly and precisely.</p><p>For Relevance, both Responsiveness to the student's answer (Rubric-driven: M = 1.97, SD = 0.18; LP-driven: M = 1.96, SD = 0.19) and Alignment with the task (Rubricdriven: M = 1.99, SD = 0.10; LP-driven: M = 2.00, SD = 0.07) were near full scores in both conditions. The result indicated that feedback was consistently grounded in students' written responses and aligned with the goals and requirements of the task, with only rare instances of loosely aligned feedback.</p><p>For Engagement and Motivation, mean scores were high for both encouraging Tone (Rubric-driven: M = 1.91, SD = 0.35; LP-driven: M = 1.90, SD = 0.37), indicating that feedback frequently used supportive and motivating language, and Task engagement (Rubric-driven: M = 1.99, SD = 0.10; LP-driven: M = 2.00, SD = 0.07), meaning feedback almost always encouraged students to engage further with the task or their reasoning.</p><p>Finally, for Reflectiveness, Actionable sub-dimension showed near-ceiling means (Rubric-driven: M = 1.99, SD = 0.14; LP: M = 2.00, SD = 0.07), whereas Reflectiveness Prompting exhibited comparatively lower mean scores (Rubric-driven: M = 1.61, SD = 0.56; LP: M = 1.53, SD = 0.59), indicating greater variability in this aspect of feedback quality. The results indicated that the two sets of feedback provided clear and appropriate guidance for improvement, and most feedback instances included reflective questions or prompts; some cases provided limited or no explicit opportunities for reflection, resulting in greater variability on this sub-dimension. This overall pattern supports the conclusion that both Rubric-driven and LP-driven pipelines are able to generate high-quality feedback. Two examples of the full-score feedback of Rubric-driven and LP-driven are shown below (Figure <ref type="figure" target="#fig_2">4</ref>): </p></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="4.2">Comparison of Feedback Quality Between the Two Pipelines</head><p>To test whether the feedback quality difference between the Rubric-driven and LPdriven pipelines, we conducted paired-samples t-tests for each feedback sub-dimension (Table <ref type="table" target="#tab_2">3</ref>). Because each of the 207 student responses received feedback from both pipelines, the paired design compared within-response differences while controlling student response content. Degrees of freedom were 206 for all estimable tests. Overall, the paired t-tests indicated no statistically significant differences between the two pipelines across any feedback sub-dimension (all p &gt; .05). For Clarity, no differences were detected for the Language accessibility (t = 0.00, df = 206, p = 1.000) or Structure (t = 0.84, df = 206, p = .399). For Relevance, the sub-dimension of Responsiveness to the student answer did not differ across pipelines (t = 0.28, df = 206, p = .782), nor did the Alignment with task requirements (t = -0.58, df = 206, p = .565). Similarly, for Engagement and Motivation, no significant differences were observed for encouraging Tone (t = 0.50, df = 206, p = .618) or Task engagement (t = -0.58, df = 206, p = .565). For Reflectiveness, Actionable also showed no difference (t = -0.45, df = 206, p = .656). Reflective Prompting yielded the largest observed test statistic but remained non-significant (t = 1.72, df = 206, p = .088).</p><p>For the two Accuracy sub-dimensions, scientific Correctness and Terminology precision, paired t-tests were not estimable because all feedback instances received the maximum score (M = 2.00) in both pipelines, resulting in zero variance and no withinpair differences.</p><p>Taken together, these inferential results indicate that, across all evaluable sub-dimensions, feedback quality did not differ statistically between the Rubric-driven and LP-driven pipelines under the conditions of this study. </p></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="5">Discussion</head></div>
-<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1">Feedback Quality</head><p>Across both pipelines, feedback quality was consistently high on the 0-2 rubric scale, with near-ceiling means for most sub-dimensions (e.g., Clarity, Relevance, Engagement) and perfect scores for scientific Correctness and Terminology. In other words, feedback consistently met the rubric's highest quality standards across evaluated dimensions, clear and age-appropriate phrasing, strong alignment to the student response and task, supportive tone, and actionable guidance. Importantly, Accuracy was consistently high in this dataset: coders did not identify scientific misconceptions or incorrect terminology in any of the 414 feedback instances, resulting in zero variance for the two accuracy sub-dimensions. This pattern suggests that, under a constrained prompt and a well-defined task context, the system can reliably produce scientifically sound feedback at scale. This result is consistent with a broader line of work showing that automated feedback can be effective when it is tightly aligned to task goals and provides actionable guidance rather than generic comments. For example, a previous study conducted by <ref type="bibr" target="#b33">Zhu et al. (2020)</ref> <ref type="bibr" target="#b33">[35]</ref> has shown that automated feedback embedded in science argumentation tasks has been shown to shape students' revision behavior, especially when feedback is contextualized to the student's work rather than generic. Related work in science education conducted by <ref type="bibr" target="#b16">Lee et al. (2019)</ref>  <ref type="bibr" target="#b16">[17]</ref> has also demonstrated the feasibility of automated text scoring with real-time, revision-oriented feedback for scientific arguments, emphasizing that carefully engineered feedback systems can support student improvement in authentic science practices. Although prior studies relied on human-expert-designed rubrics to guide automated evaluation, this study illustrates an alternative and generalizable approach to integrating LP-driven structures into automated feedback systems.</p><p>Recent studies that evaluate AI feedback using analytic rubrics increasingly highlight that the structure given to the model (criteria, constraints, context) strongly influences feedback quality. A large-scale study comparing AI-generated and human-authored formative feedback using an expert rubric found that AI feedback can reach strong quality on multiple pedagogical dimensions, though quality varies by dimension and context <ref type="bibr" target="#b34">[36]</ref>. Similarly, work on criterion-based evaluation with detailed criteria shows that providing explicit criteria can improve the reliability and defensibility of automated judgments <ref type="bibr" target="#b35">[37]</ref>. These patterns are consistent with our design: both pipelines supplied explicit evaluative, and both produced high-quality outputs.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.1">Feedback Quality</head><p>Across both pipelines, feedback quality was consistently high on the 0-2 rubric scale, with near-ceiling means for most sub-dimensions (e.g., Clarity, Relevance, Engagement) and perfect scores for scientific Correctness and Terminology. In other words, feedback consistently met the rubric's highest quality standards across evaluated dimensions, clear and age-appropriate phrasing, strong alignment to the student response and task, supportive tone, and actionable guidance. Importantly, Accuracy was consistently high in this dataset: coders did not identify scientific misconceptions or incorrect terminology in any of the 414 feedback instances, resulting in zero variance for the two accuracy sub-dimensions. This pattern suggests that, under a constrained prompt and a well-defined task context, the system can reliably produce scientifically sound feedback at scale. This result is consistent with a broader line of work showing that automated feedback can be effective when it is tightly aligned to task goals and provides actionable guidance rather than generic comments. For example, a previous study conducted by <ref type="bibr" target="#b34">Zhu et al. (2020)</ref> <ref type="bibr" target="#b34">[35]</ref> has shown that automated feedback embedded in science argumentation tasks has been shown to shape students' revision behavior, especially when feedback is contextualized to the student's work rather than generic. Related work in science education conducted by <ref type="bibr" target="#b16">Lee et al. (2019)</ref>  <ref type="bibr" target="#b16">[17]</ref> has also demonstrated the feasibility of automated text scoring with real-time, revision-oriented feedback for scientific arguments, emphasizing that carefully engineered feedback systems can support student improvement in authentic science practices. Although prior studies relied on human-expert-designed rubrics to guide automated evaluation, this study illustrates an alternative and generalizable approach to integrating LP-driven structures into automated feedback systems.</p><p>Recent studies that evaluate AI feedback using analytic rubrics increasingly highlight that the structure given to the model (criteria, constraints, context) strongly influences feedback quality. A large-scale study comparing AI-generated and human-authored formative feedback using an expert rubric found that AI feedback can reach strong quality on multiple pedagogical dimensions, though quality varies by dimension and context <ref type="bibr" target="#b35">[36]</ref>. Similarly, work on criterion-based evaluation with detailed criteria shows that providing explicit criteria can improve the reliability and defensibility of automated judgments <ref type="bibr" target="#b36">[37]</ref>. These patterns are consistent with our design: both pipelines supplied explicit evaluative, and both produced high-quality outputs.</p></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="5.2">Synthesis with rubric-based feedback research</head><p>A key contribution of this study is not just that the feedback was high quality, but that LP-derived rubric criteria performed comparably to expert-authored rubric criteria. This is important because the majority of rubric-based automated feedback work depends on carefully crafted, task-specific rubrics to ensure feedback is diagnostic, aligned, and actionable. In science education contexts, systems like automated text scoring with real-time feedback show that structured criteria can support learners' revision and argument quality <ref type="bibr" target="#b16">[17]</ref>. At the same time, task-by-task rubric development remains a practical bottleneck for scaling AI feedback across diverse classroom tasks. The findings suggest a synthesis: learning progressions can function as an alternative pedagogical foundation that enables systems to generate task-relevant criteria (rubric instantiation) without requiring experts to author a bespoke rubric for every new phenomenon. This aligns with recent LP with automated analysis work emphasizing that LP-aligned tools can support assessment and learning in STEM by anchoring automated interpretations in developmental descriptions of student thinking <ref type="bibr" target="#b26">[27]</ref>. In design terms, these results support a "domain backbone" → "task instantiation" approach: experts invest in validating learning progressions, and AI systems instantiate task rubrics and feedback from that backbone.</p></div>
 <div xmlns="http://www.tei-c.org/ns/1.0"><head n="6">Implementation and Limitation</head><p>The current study focused on a middle school chemistry explanation task involving characteristic properties of gases. Although this task represents a common type of NGSS-aligned explanation activity, the findings may not generalize to other disciplines (e.g., Mathematics, Language Arts). This approach also needs more empirical evidence on other science domains, grade levels, or task formats (e.g., modeling, data analysis across extended datasets, or multi-step investigations). Future work should examine whether learning-progression-driven feedback performs similarly across a broader range of scientific practices and content areas.</p><p>Secondly, this study evaluated feedback quality rather than student learning outcomes. While high-quality feedback is a necessary condition for supporting learning, the present analysis does not assess how students interpret, use, or act upon the feedback, nor whether feedback generated through different pipelines leads to differential learning gains. Prior research suggests that feedback uptake and revision behavior are influenced by classroom context and instructional integration; thus, future studies should investigate the impact of LP-driven feedback on student revision and learning over time.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Fig. 1 .</head><label>1</label><figDesc>Fig. 1. The Gas-Filled Balloons Task</figDesc><graphic coords="6,155.02,147.40,285.25,240.39" type="bitmap" /></figure>
 <figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Fig. 2 .Fig. 3 .</head><label>23</label><figDesc>Fig. 2. Learning Progression for Evidence-based Explanations</figDesc><graphic coords="7,127.58,207.40,340.15,72.00" type="bitmap" /></figure>
@@ -121,18 +104,18 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 
 <biblStruct xml:id="b0">
 	<monogr>
-		<title level="m" type="main">Supporting Grade 5-8 Students in Constructing Explanations in Science: The Claim, Evidence, and Reasoning Framework for Talk and Writing</title>
 		<author>
 			<persName><forename type="first">K</forename><forename type="middle">L</forename><surname>Mcneill</surname></persName>
 		</author>
 		<author>
 			<persName><forename type="first">J</forename><forename type="middle">S</forename><surname>Krajcik</surname></persName>
 		</author>
+		<title level="m">Supporting Grade 5-8 Students in Constructing Explanations in Science: The Claim, Evidence, and Reasoning Framework for Talk and Writing</title>
 		<imprint>
 			<date type="published" when="2011">2011</date>
-			<publisher>Pearson</publisher>
 		</imprint>
 	</monogr>
+	<note>Pearson</note>
 </biblStruct>
 
 <biblStruct xml:id="b1">
@@ -210,21 +193,16 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<analytic>
 		<title level="a" type="main">A systematic review on the future of educational assessment: AI-driven grading and personalised feedback in higher education</title>
 		<author>
-			<persName><forename type="first">Deepshikha</forename><surname>Deepshikha</surname></persName>
-			<idno type="ORCID">0000-0003-3905-1019</idno>
+			<persName><forename type="first">D</forename><surname>Deepshikha</surname></persName>
 		</author>
-		<idno type="DOI">10.1108/aiie-03-2025-0036</idno>
+		<idno type="DOI">10.1108/AIIE-03-2025-0036</idno>
 		<ptr target="https://doi.org/10.1108/AIIE-03-2025-0036" />
 	</analytic>
 	<monogr>
-		<title level="j">Artificial Intelligence in Education</title>
-		<idno type="ISSNe">3049-5474</idno>
+		<title level="j">Artif. Intell. Educ</title>
 		<imprint>
-			<biblScope unit="volume">2</biblScope>
-			<biblScope unit="issue">2</biblScope>
-			<biblScope unit="page" from="75" to="115" />
-			<date type="published" when="2025-11-21">2025</date>
-			<publisher>Emerald</publisher>
+			<biblScope unit="page" from="1" to="41" />
+			<date type="published" when="2025">2025</date>
 		</imprint>
 	</monogr>
 </biblStruct>
@@ -285,23 +263,21 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<analytic>
 		<title level="a" type="main">Exploring the Efficacy of Rubric-Based AI Feedback in Enhancing Student Writing Outcomes</title>
 		<author>
-			<persName><forename type="first">Pauli</forename><surname>Lai</surname></persName>
-			<idno type="ORCID">0000-0001-5312-5657</idno>
+			<persName><forename type="first">P</forename><surname>Lai</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">Ivan</forename><surname>Lau</surname></persName>
+			<persName><forename type="first">I</forename><surname>Lau</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">Richard</forename><surname>Pang</surname></persName>
+			<persName><forename type="first">R</forename><surname>Pang</surname></persName>
 		</author>
-		<idno type="DOI">10.1109/waie63876.2024.00047</idno>
+		<idno type="DOI">10.1109/WAIE63876.2024.00047</idno>
 		<ptr target="https://doi.org/10.1109/WAIE63876.2024.00047" />
 	</analytic>
 	<monogr>
 		<title level="m">2024 6th International Workshop on Artificial Intelligence and Education (WAIE)</title>
 		<imprint>
-			<publisher>IEEE</publisher>
-			<date type="published" when="2024-09-28">2024</date>
+			<date type="published" when="2024">2024</date>
 			<biblScope unit="page" from="220" to="224" />
 		</imprint>
 	</monogr>
@@ -335,16 +311,19 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<analytic>
 		<title level="a" type="main">Appropriate Criteria: Key to Effective Rubrics</title>
 		<author>
-			<persName><forename type="first">S</forename><forename type="middle">M</forename><surname>Brookhart</surname></persName>
+			<persName><forename type="first">Susan</forename><forename type="middle">M</forename><surname>Brookhart</surname></persName>
 		</author>
 		<idno type="DOI">10.3389/feduc.2018.00022</idno>
 		<ptr target="https://doi.org/10.3389/feduc.2018.00022" />
 	</analytic>
 	<monogr>
-		<title level="j">Front. Educ</title>
+		<title level="j">Frontiers in Education</title>
+		<title level="j" type="abbrev">Front. Educ.</title>
+		<idno type="ISSNe">2504-284X</idno>
 		<imprint>
 			<biblScope unit="volume">3</biblScope>
-			<date type="published" when="2018">2018</date>
+			<date type="published" when="2018-04-10">2018</date>
+			<publisher>Frontiers Media SA</publisher>
 		</imprint>
 	</monogr>
 </biblStruct>
@@ -406,25 +385,20 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<analytic>
 		<title level="a" type="main">Learning progressions: Aligning curriculum, instruction, and assessment</title>
 		<author>
-			<persName><forename type="first">Ravit</forename><forename type="middle">Golan</forename><surname>Duncan</surname></persName>
+			<persName><forename type="first">R</forename><forename type="middle">G</forename><surname>Duncan</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">Cindy</forename><forename type="middle">E</forename><surname>Hmelo‐silver</surname></persName>
+			<persName><forename type="first">C</forename><forename type="middle">E</forename><surname>Hmelo-Silver</surname></persName>
 		</author>
 		<idno type="DOI">10.1002/tea.20316</idno>
 		<ptr target="https://doi.org/10.1002/tea.20316" />
 	</analytic>
 	<monogr>
-		<title level="j">Journal of Research in Science Teaching</title>
-		<title level="j" type="abbrev">J Res Sci Teach</title>
-		<idno type="ISSN">0022-4308</idno>
-		<idno type="ISSNe">1098-2736</idno>
+		<title level="j">J. Res. Sci. Teach</title>
 		<imprint>
 			<biblScope unit="volume">46</biblScope>
-			<biblScope unit="issue">6</biblScope>
 			<biblScope unit="page" from="606" to="609" />
-			<date type="published" when="2009-07-02">2009</date>
-			<publisher>Wiley</publisher>
+			<date type="published" when="2009">2009</date>
 		</imprint>
 	</monogr>
 </biblStruct>
@@ -433,25 +407,20 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<analytic>
 		<title level="a" type="main">The characteristics of formative assessment in science education</title>
 		<author>
-			<persName><forename type="first">Beverley</forename><surname>Bell</surname></persName>
+			<persName><forename type="first">B</forename><surname>Bell</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">Bronwen</forename><surname>Cowie</surname></persName>
+			<persName><forename type="first">B</forename><surname>Cowie</surname></persName>
 		</author>
 		<idno type="DOI">10.1002/sce.1022</idno>
 		<ptr target="https://doi.org/10.1002/sce.1022" />
 	</analytic>
 	<monogr>
-		<title level="j">Science Education</title>
-		<title level="j" type="abbrev">Science Education</title>
-		<idno type="ISSN">0036-8326</idno>
-		<idno type="ISSNe">1098-237X</idno>
+		<title level="j">Sci. Educ</title>
 		<imprint>
 			<biblScope unit="volume">85</biblScope>
-			<biblScope unit="issue">5</biblScope>
 			<biblScope unit="page" from="536" to="553" />
-			<date type="published" when="2001-08-24">2001</date>
-			<publisher>Wiley</publisher>
+			<date type="published" when="2001">2001</date>
 		</imprint>
 	</monogr>
 </biblStruct>
@@ -460,21 +429,17 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<analytic>
 		<title level="a" type="main">Assessment and feedback in science education</title>
 		<author>
-			<persName><forename type="first">Paul</forename><surname>Black</surname></persName>
+			<persName><forename type="first">P</forename><surname>Black</surname></persName>
 		</author>
-		<idno type="DOI">10.1016/0191-491x(95)00015-m</idno>
+		<idno type="DOI">10.1016/0191-491X(95)00015-M</idno>
 		<ptr target="https://doi.org/10.1016/0191-491X(95)00015-M" />
 	</analytic>
 	<monogr>
-		<title level="j">Studies in Educational Evaluation</title>
-		<title level="j" type="abbrev">Studies in Educational Evaluation</title>
-		<idno type="ISSN">0191-491X</idno>
+		<title level="j">Stud. Educ. Eval</title>
 		<imprint>
 			<biblScope unit="volume">21</biblScope>
-			<biblScope unit="issue">3</biblScope>
 			<biblScope unit="page" from="257" to="279" />
-			<date type="published" when="1995-01">1995</date>
-			<publisher>Elsevier BV</publisher>
+			<date type="published" when="1995">1995</date>
 		</imprint>
 	</monogr>
 </biblStruct>
@@ -483,63 +448,74 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<analytic>
 		<title level="a" type="main">Data mining and education</title>
 		<author>
-			<persName><forename type="first">K</forename><forename type="middle">R</forename><surname>Koedinger</surname></persName>
+			<persName><forename type="first">Kenneth</forename><forename type="middle">R</forename><surname>Koedinger</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">S</forename><surname>D'mello</surname></persName>
+			<persName><forename type="first">Sidney</forename><surname>D'mello</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">E</forename><forename type="middle">A</forename><surname>Mclaughlin</surname></persName>
+			<persName><forename type="first">Elizabeth</forename><forename type="middle">A</forename><surname>Mclaughlin</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">Z</forename><forename type="middle">A</forename><surname>Pardos</surname></persName>
+			<persName><forename type="first">Zachary</forename><forename type="middle">A</forename><surname>Pardos</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">C</forename><forename type="middle">P</forename><surname>Rosé</surname></persName>
+			<persName><forename type="first">Carolyn</forename><forename type="middle">P</forename><surname>Rosé</surname></persName>
 		</author>
 		<idno type="DOI">10.1002/wcs.1350</idno>
 		<ptr target="https://doi.org/10.1002/wcs.1350" />
 	</analytic>
 	<monogr>
-		<title level="j">WIREs Cogn. Sci</title>
+		<title level="j">WIREs Cognitive Science</title>
+		<title level="j" type="abbrev">WIRES Cognitive Science</title>
+		<idno type="ISSN">1939-5078</idno>
+		<idno type="ISSNe">1939-5086</idno>
 		<imprint>
 			<biblScope unit="volume">6</biblScope>
+			<biblScope unit="issue">4</biblScope>
 			<biblScope unit="page" from="333" to="353" />
-			<date type="published" when="2015">2015</date>
+			<date type="published" when="2015-04-29">2015</date>
+			<publisher>Wiley</publisher>
 		</imprint>
 	</monogr>
 </biblStruct>
 
 <biblStruct xml:id="b16">
 	<analytic>
-		<title level="a" type="main">Automated text scoring and real-time adjustable feedback: Supporting revision of scientific arguments involving uncertainty</title>
+		<title level="a" type="main">Automated text scoring and real‐time adjustable feedback: Supporting revision of scientific arguments involving uncertainty</title>
 		<author>
-			<persName><forename type="first">H.-S</forename><surname>Lee</surname></persName>
+			<persName><forename type="first">Hee‐sun</forename><surname>Lee</surname></persName>
+			<idno type="ORCID">0000-0002-4673-5008</idno>
 		</author>
 		<author>
-			<persName><forename type="first">A</forename><surname>Pallant</surname></persName>
+			<persName><forename type="first">Amy</forename><surname>Pallant</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">S</forename><surname>Pryputniewicz</surname></persName>
+			<persName><forename type="first">Sarah</forename><surname>Pryputniewicz</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">T</forename><surname>Lord</surname></persName>
+			<persName><forename type="first">Trudi</forename><surname>Lord</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">M</forename><surname>Mulholland</surname></persName>
+			<persName><forename type="first">Matthew</forename><surname>Mulholland</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">O</forename><forename type="middle">L</forename><surname>Liu</surname></persName>
+			<persName><forename type="first">Ou</forename><forename type="middle">Lydia</forename><surname>Liu</surname></persName>
 		</author>
 		<idno type="DOI">10.1002/sce.21504</idno>
 		<ptr target="https://doi.org/10.1002/sce.21504" />
 	</analytic>
 	<monogr>
-		<title level="j">Sci. Educ</title>
+		<title level="j">Science Education</title>
+		<title level="j" type="abbrev">Science Education</title>
+		<idno type="ISSN">0036-8326</idno>
+		<idno type="ISSNe">1098-237X</idno>
 		<imprint>
 			<biblScope unit="volume">103</biblScope>
+			<biblScope unit="issue">3</biblScope>
 			<biblScope unit="page" from="590" to="622" />
-			<date type="published" when="2019">2019</date>
+			<date type="published" when="2019-03-14">2019</date>
+			<publisher>Wiley</publisher>
 		</imprint>
 	</monogr>
 </biblStruct>
@@ -610,19 +586,26 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<analytic>
 		<title level="a" type="main">Can ChatGPT Replace the Teacher in Assessment? A Review of Research on the Use of Large Language Models in Grading and Providing Feedback</title>
 		<author>
-			<persName><forename type="first">M</forename><surname>Jukiewicz</surname></persName>
+			<persName><forename type="first">Marcin</forename><surname>Jukiewicz</surname></persName>
+			<idno type="ORCID">0000-0001-9404-9814</idno>
 		</author>
 		<author>
-			<persName><forename type="first">M</forename><surname>Wyrwa</surname></persName>
+			<persName><forename type="first">Michał</forename><surname>Wyrwa</surname></persName>
+			<idno type="ORCID">0000-0003-4227-1629</idno>
 		</author>
 		<idno type="DOI">10.3390/app16020680</idno>
 		<ptr target="https://doi.org/10.3390/app16020680" />
 	</analytic>
 	<monogr>
-		<title level="j">Appl. Sci</title>
+		<title level="j">Applied Sciences</title>
+		<title level="j" type="abbrev">Applied Sciences</title>
+		<idno type="ISSNe">2076-3417</idno>
 		<imprint>
 			<biblScope unit="volume">16</biblScope>
-			<date type="published" when="2026">2026</date>
+			<biblScope unit="issue">2</biblScope>
+			<biblScope unit="page">680</biblScope>
+			<date type="published" when="2026-01-08">2026</date>
+			<publisher>MDPI AG</publisher>
 		</imprint>
 	</monogr>
 </biblStruct>
@@ -737,32 +720,11 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<monogr>
 		<author>
 			<persName><forename type="first">N</forename><forename type="middle">R</forename><surname>Council</surname></persName>
+			<affiliation>
+				<orgName type="collaboration">Education, D. of B. and S.S. and, Education, B. on S., Standards, C. on a C.F. for N.K.-12 S.E</orgName>
+			</affiliation>
 		</author>
-		<author>
-			<persName><forename type="first">D</forename><surname>Education</surname></persName>
-		</author>
-		<author>
-			<persName><forename type="first">S</forename><forename type="middle">S</forename><surname>Education</surname></persName>
-		</author>
-		<author>
-			<persName><forename type="first">B</forename></persName>
-		</author>
-		<author>
-			<persName><forename type="first">S</forename><surname>Standards</surname></persName>
-		</author>
-		<author>
-			<persName><forename type="first">C</forename></persName>
-		</author>
-		<author>
-			<persName><forename type="first">C</forename><forename type="middle">F</forename></persName>
-		</author>
-		<author>
-			<persName><forename type="first">N</forename><forename type="middle">K</forename><surname>-12</surname></persName>
-		</author>
-		<author>
-			<persName><forename type="first">S</forename><forename type="middle">E</forename></persName>
-		</author>
-		<title level="m">A Framework for K-12 Science Education: Practices, Crosscutting Concepts, and Core Ideas</title>
+		<title level="m">Framework for K-12 Science Education: Practices, Crosscutting Concepts, and Core Ideas</title>
 		<imprint>
 			<publisher>National Academies Press</publisher>
 			<date type="published" when="2012">2012</date>
@@ -774,52 +736,47 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	<analytic>
 		<title level="a" type="main">Measuring progressions: Assessment structures underlying a learning progression</title>
 		<author>
-			<persName><forename type="first">M</forename><surname>Wilson</surname></persName>
+			<persName><forename type="first">Mark</forename><surname>Wilson</surname></persName>
 		</author>
 		<idno type="DOI">10.1002/tea.20318</idno>
 		<ptr target="https://doi.org/10.1002/tea.20318" />
 	</analytic>
 	<monogr>
-		<title level="j">J. Res. Sci. Teach</title>
+		<title level="j">Journal of Research in Science Teaching</title>
+		<title level="j" type="abbrev">J Res Sci Teach</title>
+		<idno type="ISSN">0022-4308</idno>
+		<idno type="ISSNe">1098-2736</idno>
 		<imprint>
 			<biblScope unit="volume">46</biblScope>
+			<biblScope unit="issue">6</biblScope>
 			<biblScope unit="page" from="716" to="730" />
-			<date type="published" when="2009">2009</date>
+			<date type="published" when="2009-07-07">2009</date>
+			<publisher>Wiley</publisher>
 		</imprint>
 	</monogr>
 </biblStruct>
 
 <biblStruct xml:id="b25">
-	<analytic>
-		<title level="a" type="main">Automated Scoring in Learning Progression‐Based Assessment: A Comparison of Researcher and Machine Interpretations</title>
+	<monogr>
+		<title level="m" type="main">Automated Scoring in Learning Progression-Based Assessment: A Comparison of Researcher and Machine Interpretations</title>
 		<author>
-			<persName><forename type="first">Hui</forename><surname>Jin</surname></persName>
-			<idno type="ORCID">0000-0001-7688-703X</idno>
+			<persName><forename type="first">H</forename><surname>Jin</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">Cynthia</forename><surname>Lima</surname></persName>
-			<idno type="ORCID">0000-0002-2188-4998</idno>
+			<persName><forename type="first">C</forename><surname>Lima</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">Limin</forename><surname>Wang</surname></persName>
-			<idno type="ORCID">0009-0003-9818-5145</idno>
+			<persName><forename type="first">L</forename><surname>Wang</surname></persName>
 		</author>
 		<idno type="DOI">10.1111/emip.70003</idno>
 		<ptr target="https://doi.org/10.1111/emip.70003" />
-	</analytic>
-	<monogr>
-		<title level="j">Educational Measurement: Issues and Practice</title>
-		<title level="j" type="abbrev">Educational Measurement</title>
-		<idno type="ISSN">0731-1745</idno>
-		<idno type="ISSNe">1745-3992</idno>
 		<imprint>
+			<date type="published" when="2025">2025</date>
 			<biblScope unit="volume">44</biblScope>
-			<biblScope unit="issue">3</biblScope>
 			<biblScope unit="page" from="25" to="37" />
-			<date type="published" when="2025-08-13">2025</date>
-			<publisher>Wiley</publisher>
 		</imprint>
 	</monogr>
+	<note type="report_type">Educ. Meas. Issues Pract</note>
 </biblStruct>
 
 <biblStruct xml:id="b26">
@@ -844,8 +801,8 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 </biblStruct>
 
 <biblStruct xml:id="b27">
-	<monogr>
-		<title level="m" type="main">Creating and using instructionally supportive assessments in NGSS classrooms</title>
+	<analytic>
+		<title level="a" type="main">Creating and using instructionally supportive assessments in NGSS classrooms</title>
 		<author>
 			<persName><forename type="first">C</forename><forename type="middle">J</forename><surname>Harris</surname></persName>
 		</author>
@@ -855,36 +812,56 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 		<author>
 			<persName><forename type="first">J</forename><forename type="middle">W</forename><surname>Pellegrino</surname></persName>
 		</author>
+	</analytic>
+	<monogr>
+		<title level="j">National Science Teaching Association</title>
 		<imprint>
 			<date type="published" when="2024">2024</date>
-			<publisher>National Science Teaching Association</publisher>
+			<publisher>NSTA Press</publisher>
 		</imprint>
 	</monogr>
 </biblStruct>
 
 <biblStruct xml:id="b28">
-	<analytic>
-		<title level="a" type="main">Validity Evidence for Learning Progression-Based Assessment Items That Fuse Core Disciplinary Ideas and Science Practices</title>
-		<author>
-			<persName><forename type="first">A</forename><forename type="middle">W</forename><surname>Gotwals</surname></persName>
-		</author>
-		<author>
-			<persName><forename type="first">N</forename><forename type="middle">B</forename><surname>Songer</surname></persName>
-		</author>
-		<idno type="DOI">10.1002/tea.21083</idno>
-		<ptr target="https://doi.org/10.1002/tea.21083" />
-	</analytic>
 	<monogr>
-		<title level="j">J. Res. Sci. Teach</title>
+		<title/>
+		<author>
+			<persName><surname>Authors</surname></persName>
+		</author>
 		<imprint>
-			<biblScope unit="volume">50</biblScope>
-			<biblScope unit="page" from="597" to="626" />
-			<date type="published" when="2013">2013</date>
+			<date type="published" when="2022">2022</date>
 		</imprint>
 	</monogr>
 </biblStruct>
 
 <biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Validity Evidence for Learning Progression‐Based Assessment Items That Fuse Core Disciplinary Ideas and Science Practices</title>
+		<author>
+			<persName><forename type="first">Amelia</forename><forename type="middle">Wenk</forename><surname>Gotwals</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Nancy</forename><forename type="middle">Butler</forename><surname>Songer</surname></persName>
+		</author>
+		<idno type="DOI">10.1002/tea.21083</idno>
+		<ptr target="https://doi.org/10.1002/tea.21083" />
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Research in Science Teaching</title>
+		<title level="j" type="abbrev">J Res Sci Teach</title>
+		<idno type="ISSN">0022-4308</idno>
+		<idno type="ISSNe">1098-2736</idno>
+		<imprint>
+			<biblScope unit="volume">50</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="597" to="626" />
+			<date type="published" when="2013-02-28">2013</date>
+			<publisher>Wiley</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b30">
 	<analytic>
 		<title level="a" type="main">A Framework for Designing an AI Chatbot to Support Scientific Argumentation</title>
 		<author>
@@ -926,48 +903,47 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	</monogr>
 </biblStruct>
 
-<biblStruct xml:id="b30">
+<biblStruct xml:id="b31">
 	<analytic>
 		<title level="a" type="main">A Coefficient of Agreement for Nominal Scales</title>
 		<author>
-			<persName><forename type="first">Jacob</forename><surname>Cohen</surname></persName>
+			<persName><forename type="first">J</forename><surname>Cohen</surname></persName>
 		</author>
 		<idno type="DOI">10.1177/001316446002000104</idno>
 		<ptr target="https://doi.org/10.1177/001316446002000104" />
 	</analytic>
 	<monogr>
-		<title level="j">Educational and Psychological Measurement</title>
-		<title level="j" type="abbrev">Educational and Psychological Measurement</title>
-		<idno type="ISSN">0013-1644</idno>
-		<idno type="ISSNe">1552-3888</idno>
+		<title level="j">Educ. Psychol. Meas</title>
 		<imprint>
 			<biblScope unit="volume">20</biblScope>
-			<biblScope unit="issue">1</biblScope>
 			<biblScope unit="page" from="37" to="46" />
-			<date type="published" when="1960-04">1960</date>
-			<publisher>SAGE Publications</publisher>
-		</imprint>
-	</monogr>
-</biblStruct>
-
-<biblStruct xml:id="b31">
-	<analytic>
-		<title level="a" type="main">Interrater reliability: the kappa statistic</title>
-		<author>
-			<persName><forename type="first">M</forename><forename type="middle">L</forename><surname>Mchugh</surname></persName>
-		</author>
-	</analytic>
-	<monogr>
-		<title level="j">Biochem. Medica</title>
-		<imprint>
-			<biblScope unit="volume">22</biblScope>
-			<biblScope unit="page" from="276" to="282" />
-			<date type="published" when="2012">2012</date>
+			<date type="published" when="1960">1960</date>
 		</imprint>
 	</monogr>
 </biblStruct>
 
 <biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Interrater reliability: the kappa statistic</title>
+		<author>
+			<persName><forename type="first">Marry</forename><forename type="middle">L</forename><surname>Mchugh</surname></persName>
+		</author>
+		<idno type="DOI">10.11613/bm.2012.031</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Biochemia Medica</title>
+		<title level="j" type="abbrev">Biochem Med</title>
+		<idno type="ISSNe">1846-7482</idno>
+		<imprint>
+			<biblScope unit="volume">22</biblScope>
+			<biblScope unit="page" from="276" to="282" />
+			<date type="published" when="2012">2012</date>
+			<publisher>Croatian Society for Medical Biochemistry and Laboratory Medicine</publisher>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b33">
 	<analytic>
 		<title level="a" type="main">Kappa statistic considerations in evaluating inter-rater reliability between two raters: which, when and context matters</title>
 		<author>
@@ -992,67 +968,57 @@ xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.co
 	</monogr>
 </biblStruct>
 
-<biblStruct xml:id="b33">
+<biblStruct xml:id="b34">
 	<analytic>
 		<title level="a" type="main">The effect of automated feedback on revision behavior and learning gains in formative assessment of scientific argument writing</title>
 		<author>
-			<persName><forename type="first">Mengxiao</forename><surname>Zhu</surname></persName>
-			<idno type="ORCID">0000-0003-3596-5585</idno>
+			<persName><forename type="first">M</forename><surname>Zhu</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">Ou</forename><forename type="middle">Lydia</forename><surname>Liu</surname></persName>
+			<persName><forename type="first">O</forename><forename type="middle">L</forename><surname>Liu</surname></persName>
 		</author>
 		<author>
-			<persName><forename type="first">Hee-Sun</forename><surname>Lee</surname></persName>
+			<persName><forename type="first">H.-S</forename><surname>Lee</surname></persName>
 		</author>
 		<idno type="DOI">10.1016/j.compedu.2019.103668</idno>
 		<ptr target="https://doi.org/10.1016/j.compedu.2019.103668" />
 	</analytic>
 	<monogr>
-		<title level="j">Computers &amp; Education</title>
-		<title level="j" type="abbrev">Computers &amp; Education</title>
-		<idno type="ISSN">0360-1315</idno>
+		<title level="j">Comput. Educ</title>
 		<imprint>
 			<biblScope unit="volume">143</biblScope>
 			<biblScope unit="page">103668</biblScope>
-			<date type="published" when="2020-01">2020</date>
-			<publisher>Elsevier BV</publisher>
-		</imprint>
-	</monogr>
-</biblStruct>
-
-<biblStruct xml:id="b34">
-	<analytic>
-		<title level="a" type="main">Can students judge like experts? A large-scale study on the pedagogical quality of AI and human personalized formative feedback</title>
-		<author>
-			<persName><forename type="first">Tanya</forename><surname>Nazaretsky</surname></persName>
-			<idno type="ORCID">0000-0003-1343-0627</idno>
-		</author>
-		<author>
-			<persName><forename type="first">Hagit</forename><surname>Gabbay</surname></persName>
-			<idno type="ORCID">0000-0002-2012-1964</idno>
-		</author>
-		<author>
-			<persName><forename type="first">Tanja</forename><surname>Käser</surname></persName>
-			<idno type="ORCID">0000-0003-0672-0415</idno>
-		</author>
-		<idno type="DOI">10.1016/j.caeai.2025.100533</idno>
-		<ptr target="https://doi.org/10.1016/j.caeai.2025.100533" />
-	</analytic>
-	<monogr>
-		<title level="j">Computers and Education: Artificial Intelligence</title>
-		<title level="j" type="abbrev">Computers and Education: Artificial Intelligence</title>
-		<idno type="ISSN">2666-920X</idno>
-		<imprint>
-			<biblScope unit="volume">10</biblScope>
-			<biblScope unit="page">100533</biblScope>
-			<date type="published" when="2026-06">2026</date>
-			<publisher>Elsevier BV</publisher>
+			<date type="published" when="2020">2020</date>
 		</imprint>
 	</monogr>
 </biblStruct>
 
 <biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">Can students judge like experts? A large-scale study on the pedagogical quality of AI and human personalized formative feedback</title>
+		<author>
+			<persName><forename type="first">T</forename><surname>Nazaretsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Gabbay</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">T</forename><surname>Käser</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.caeai.2025.100533</idno>
+		<ptr target="https://doi.org/10.1016/j.caeai.2025.100533" />
+	</analytic>
+	<monogr>
+		<title level="j">Comput. Educ. Artif. Intell</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="page">100533</biblScope>
+			<date type="published" when="2026">2026</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b36">
 	<analytic>
 		<title level="a" type="main">Evaluating large language models for criterion-based grading from agreement to consistency</title>
 		<author>
