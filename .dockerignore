@@ -1,0 +1,9 @@
+venv*
+venv_grobid/
+__pycache__/
+resultados/
+*.pyc
+.git
+.gitignore
+
+
