@@ -1,0 +1,200 @@
+Analisis de texto de Grobid de artículos de uso abierto
+
+Descripcion de proyecto
+
+Este proyecto efectua un analisis de texto basico sobre articulos usando grobid, extrayendo informacion estructurada de PDFs.
+
+El objetivo es procesar automaticamente los articulos y generar:
+
+Una nube de las palabras clave de los abstractos de los articulos.
+Una visualizacion del numero de figuras por articulo.
+Una lista de los links encontrados en cada articulo.
+
+El analisis se realiza mediante scripts the python sobre los archivos XML generados por Grobid.
+
+
+Dataset
+
+Los datos usados consisten en 10 articulos de libre acceso obtenidos de arXiv.
+
+Los papers se guardan en:
+
+pdf/
+
+
+Cada PDF se procesa con grobid para generar un archivo XML estructurado, que se almacenará en:
+
+
+tei/
+
+
+
+Estructura de proyecto
+
+
+project/
+
+ pdf/                        Articulos originales
+ tei/                        archivos XML generados por Grobid
+
+ proceso.sh                  Genera archivos XML usando Grobid
+ run_analysis.sh             Ejecuta el pipeline de todo el analisis
+
+ keyword_cloud.py            Genera una nube de palabras clave de los abstractos
+ figures_per_article.py      Cuenta las figuras por articulo
+ links_per_article.py        Extrae links de los articulos
+
+
+ keyword_cloud.png
+ figures_per_article.png
+ links_per_article.txt
+
+ README.md
+
+
+
+
+ Metodologia
+
+ 1. Procesamiento de PDFs con Grobid
+
+El script proceso.sh procesa los archivos PDF utilizando Grobid y genera los archivos XML.
+
+Estos archivos XML se utilizan posteriormente para el análisis.
+
+
+
+ 2. Nube de Palabras a partir de los Abstracts
+
+El script keyword_cloud.py realiza los siguientes pasos:
+
+Extrae la sección <abstract> de cada archivo XML.
+
+Limpia el texto (eliminando stopwords y signos de puntuación).
+
+Calcula la frecuencia de las palabras.
+
+Genera una visualización en forma de nube de palabras.
+
+Salida: keyword_cloud.png
+
+
+
+3. Visualización de Figuras por Artículo
+
+El script figures_per_article.py cuenta el número de etiquetas <figure> en cada archivo TEI XML.
+
+El resultado se visualiza mediante un gráfico de barras, donde cada barra corresponde a un artículo.
+
+Salida:
+
+figures_per_article.png
+
+
+
+
+4. Extracción de Enlaces de los Artículos
+
+El script links_per_article.py extrae enlaces de los archivos XML utilizando los elementos <ref> y <ptr> generados por Grobid.
+
+El script filtra los enlaces por defecto generados automáticamente por Grobid.
+
+Salida:
+
+links_per_article.txt
+
+
+
+
+ Validación de Resultados
+
+Validación de la Nube de Palabras
+
+Para validar la nube de palabras:
+
+Los abstracts extraídos se compararon manualmente con los abstracts originales de los PDF.
+
+Se eliminaron las stopwords para garantizar palabras clave significativas.
+
+Los términos más frecuentes se inspeccionaron manualmente para confirmar que coinciden con los temas de los artículos.
+
+
+
+ Validación de Figuras por Artículo
+
+La validación se realizó mediante:
+
+Conteo manual de las figuras en un subconjunto de los artículos en PDF.
+
+Comparación del conteo con el número de etiquetas <figure> en los archivos TEI XML.
+
+Los resultados fueron consistentes en las muestras analizadas
+
+
+ Validación de la Extracción de Enlaces
+
+Pasos de validación:
+
+Los enlaces extraídos se compararon manualmente con los enlaces visibles en los PDF.
+
+Los enlaces por defecto generados por Grobid fueron filtrados de los resultados.
+
+Se inspeccionaron manualmente varios artículos para asegurar la correcta extracción
+
+
+
+ Reproducibilidad
+
+Para reproducir el análisis:
+
+Instalar Grobid.
+
+Colocar los archivos PDF dentro de la carpeta pdf/.
+
+Iniciar Grobid en segundo plano:
+
+docker run -d --rm --init \-p 8070:8070 \-e JAVA_OPTS="-Xmx4g -Xms2g" \--name grobid \grobid/grobid:0.8.0
+
+Esperar un tiempo (aproximadamente 2 minutos) para que Grobid se inicialice, y luego ejecutar el script del pipeline:
+
+
+./run_analysis.sh
+
+
+Este script realizará:
+
+Limpiar los archivos previos en tei.
+
+Generar nuevos archivos XML utilizando Grobid.
+
+Ejecutar los tres scripts de análisis.
+
+Using Docker:
+1: Primero tener Grobid en ejecución:
+docker run -d --rm --init \-p 8070:8070 \-e JAVA_OPTS="-Xmx4g -Xms2g" \--name grobid \grobid/grobid:0.8.0
+
+2:Después ejecutar el programa dockerizado:
+docker run --rm -it   -v $(pwd):/app   --network host  grobid-analysis
+
+ Requisitos
+
+Las dependencias de Python incluyen:
+
+wordcloud
+
+matplotlib
+
+lxml
+
+nltk
+
+Ejemplo de instalación:
+
+
+pip install wordcloud matplotlib lxml nltk
+
+
+
+
+ License
+This project is released under the MIT License.
