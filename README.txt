@@ -149,7 +149,7 @@ To reproduce the analysis:
 
 docker run -d --rm --init \-p 8070:8070 \-e JAVA_OPTS="-Xmx4g -Xms2g" \--name grobid \grobid/grobid:0.8.0
 
-3. Run the pipeline script:
+3. Wait some time (like 2 minutes) for grobid to set up, then run the pipeline script:
 
 
 ./run_analysis.sh
@@ -187,3 +187,4 @@ pip install wordcloud matplotlib lxml nltk
 
  License
 This project is released under the MIT License.
+
